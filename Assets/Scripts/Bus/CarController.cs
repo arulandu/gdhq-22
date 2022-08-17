@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class AxleInfo {
+
     public WheelCollider leftWheel;
     public WheelCollider rightWheel;
     public bool motor;
@@ -12,10 +13,14 @@ public class AxleInfo {
 }
      
 public class CarController : MonoBehaviour {
+
     public List<AxleInfo> axleInfos;
     public float antiRoll = 5000.0f;
     public float maxMotorTorque;
     public float maxSteeringAngle;
+
+    public static float verticalInput;
+    public static float horizontalInput; 
 
     private Rigidbody _rb;
 
@@ -61,10 +66,21 @@ public class CarController : MonoBehaviour {
      
     public void FixedUpdate()
     {
-        Debug.Log(numChildren);
 
-        float motor = maxMotorTorque * Input.GetAxis("Vertical");
-        float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
+        //
+        //Debug
+        //
+
+        //Debug.Log(numChildren);
+        //Debug.Log("Vertical Input: " + verticalInput + "------- Horizontal Input: " + horizontalInput);
+
+
+        //
+        //Actual Code
+        //
+
+        float motor = maxMotorTorque * verticalInput;
+        float steering = maxSteeringAngle * horizontalInput;
      
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
