@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,12 +12,25 @@ public class AxleInfo {
 }
      
 public class CarController : MonoBehaviour {
-    public List<AxleInfo> axleInfos; 
+    public List<AxleInfo> axleInfos;
+    public float antiRoll = 5000.0f;
     public float maxMotorTorque;
     public float maxSteeringAngle;
-     
-    // finds the corresponding visual wheel
-    // correctly applies the transform
+
+    private Rigidbody _rb;
+
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
+    private void OnDrawGizmos()
+    {
+        _rb = GetComponent<Rigidbody>();
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position + transform.rotation*_rb.centerOfMass, 1f);
+    }
+
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
         if (collider.transform.childCount == 0) {
@@ -47,8 +61,23 @@ public class CarController : MonoBehaviour {
                 axleInfo.leftWheel.motorTorque = motor;
                 axleInfo.rightWheel.motorTorque = motor;
             }
+            
+            // anti-roll bars? https://forum.unity.com/threads/how-to-make-a-physically-real-stable-car-with-wheelcolliders.50643/
+            WheelHit hit;
+            var groundedL = axleInfo.leftWheel.GetGroundHit(out hit);
+            var groundedR = axleInfo.rightWheel.GetGroundHit(out hit);
+            var travelL = groundedL ? (axleInfo.leftWheel.transform.InverseTransformPoint(hit.point).y - axleInfo.leftWheel.radius) / axleInfo.leftWheel.suspensionDistance : 1.0f;
+            var travelR = groundedL ? (axleInfo.rightWheel.transform.InverseTransformPoint(hit.point).y - axleInfo.rightWheel.radius) / axleInfo.rightWheel.suspensionDistance : 1.0f;
+
+            var antiRollForce = (travelL-travelR) *antiRoll;
+            
+            if(groundedL) _rb.AddForceAtPosition(axleInfo.leftWheel.transform.up*-antiRollForce, axleInfo.leftWheel.transform.position);
+            if(groundedR) _rb.AddForceAtPosition(axleInfo.rightWheel.transform.up*-antiRollForce, axleInfo.rightWheel.transform.position);
+            
+            // update wheel graphics
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
         }
     }
+
 }
