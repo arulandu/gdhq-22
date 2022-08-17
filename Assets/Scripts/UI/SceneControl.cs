@@ -9,4 +9,19 @@ public class SceneControl : MonoBehaviour
     {
         SceneManager.LoadScene("CarPlayground");
     }
+
+    public void optionsMenu()
+    {
+        SceneManager.LoadScene("OptionsMenu");
+    }
+
+    public void mainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void quitGame()
+    {
+        Application.Quit();
+    }
 }
