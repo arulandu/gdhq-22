@@ -19,6 +19,18 @@ public class CarController : MonoBehaviour {
 
     private Rigidbody _rb;
 
+    public static uint numChildren;
+
+    public static void pickUp(uint numChildrenPickingUp){
+
+        numChildren += numChildrenPickingUp;
+    }
+
+    public static void dropOff(){
+
+        numChildren = 0;
+    }
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -49,6 +61,8 @@ public class CarController : MonoBehaviour {
      
     public void FixedUpdate()
     {
+        Debug.Log(numChildren);
+
         float motor = maxMotorTorque * Input.GetAxis("Vertical");
         float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
      
