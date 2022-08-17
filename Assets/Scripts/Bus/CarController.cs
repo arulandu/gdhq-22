@@ -16,7 +16,7 @@ public class CarController : MonoBehaviour {
     public float maxMotorTorque;
     public float maxSteeringAngle;
     
-    private static int numChildren {get; set;}
+    static int numChildren {get; set;}
      
 
     // finds the corresponding visual wheel
@@ -53,6 +53,8 @@ public class CarController : MonoBehaviour {
      
     public void FixedUpdate()
     {
+        Debug.Log(numChildren);
+
         float motor = maxMotorTorque * Input.GetAxis("Vertical");
         float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
      
