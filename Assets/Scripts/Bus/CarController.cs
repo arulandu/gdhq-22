@@ -16,7 +16,7 @@ public class CarController : MonoBehaviour {
     public float maxMotorTorque;
     public float maxSteeringAngle;
     
-    public static int numChildren {get; set;}
+    private static int numChildren {get; set;}
      
 
     // finds the corresponding visual wheel
