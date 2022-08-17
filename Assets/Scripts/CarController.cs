@@ -11,10 +11,14 @@ public class AxleInfo {
 }
      
 public class CarController : MonoBehaviour {
+
     public List<AxleInfo> axleInfos; 
     public float maxMotorTorque;
     public float maxSteeringAngle;
+    
+    public static int numChildren {get; set;}
      
+
     // finds the corresponding visual wheel
     // correctly applies the transform
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
@@ -31,6 +35,20 @@ public class CarController : MonoBehaviour {
      
         visualWheel.transform.position = position;
         visualWheel.transform.rotation = rotation;
+    }
+
+    //drops off all the children at the drop zone
+    //only called when bus collides with drop zone
+    public static void dropOff(){
+
+        numChildren = 0;
+    }
+
+    //picks up the children (numChildrenAtPickUp) at the pick up zone
+    //only called when bus collides with pick up zone
+    public static void pickUp(int numChildrenAtPickUp){
+
+        numChildren += numChildrenAtPickUp;
     }
      
     public void FixedUpdate()
