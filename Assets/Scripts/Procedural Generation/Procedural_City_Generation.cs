@@ -192,7 +192,7 @@ public class Procedural_City_Generation : MonoBehaviour
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the street
 
 
-        public turnStreet(float xPos, float yPos, float zPos,    uint width,    uint tileSize_,    Procedural_City_Generation thisClass) : this() {
+        public turnStreet(float xPos_, float yPos_, float zPos_,    uint width,    uint tileSize_,    Procedural_City_Generation thisClass) : this() {
 
             xPos = xPos_;
             yPos = yPos_;
