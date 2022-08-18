@@ -15,6 +15,7 @@ public class Procedural_City_Generation : MonoBehaviour
     public Quaternion defaultStreetQuaternion; //default for regular street objects
     public Quaternion leftStreetQuaternion; //streets that are on the far left (we only have one model for street side)
     public Quaternion rightStreetQuaternion; //streets that are on the far right (we only have one model for street side)
+    public Quaternion buildingBaseQuaternion;
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -89,8 +90,10 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
                     for (uint zIndex = 0; zIndex < length; zIndex++){
-                        
-                        buildingArray[xIndex, yIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingWallQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
+                        if (yIndex == 0)
+                            buildingArray[xIndex, yIndex, zIndex] = Instantiate(usedTile, new Vector3(xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingBaseQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
+                        else
+                            buildingArray[xIndex, yIndex, zIndex] = Instantiate(usedTile, new Vector3(xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingWallQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
                     }
                 }
             }
@@ -152,7 +155,7 @@ public class Procedural_City_Generation : MonoBehaviour
 
                     else {
 
-                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.street];
+                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.street_dotted];
                         usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().defaultStreetQuaternion;
                     }
 
