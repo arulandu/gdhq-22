@@ -172,8 +172,11 @@ MonoBehaviour:
   - {fileID: 766321230478197345, guid: 3152b49b8a8b31b44ab4355963c73217, type: 3}
   - {fileID: 7492017897260668505, guid: e570f4ce8e1644545a2c1917a09f8e5a, type: 3}
   - {fileID: 4256543260884320315, guid: 084332b40a55c3240852753369ba91da, type: 3}
-  building_wall_quaternion: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
-  building_base_quaternion: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
+  defaultQuaternion: {x: 0, y: 0, z: 0, w: 1}
+  buildingWallQuaternion: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
+  defaultStreetQuaternion: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
+  leftStreetQuaternion: {x: -0.00000003090862, y: -0.70710677, z: -0.70710677, w: 0.00000003090862}
+  rightStreetQuaternion: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
 --- !u!4 &1351236
 Transform:
   m_ObjectHideFlags: 0
