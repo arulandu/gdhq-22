@@ -12,6 +12,8 @@ public class AxleInfo {
     public bool steering;
 }
      
+
+
 public class CarController : MonoBehaviour {
 
     public List<AxleInfo> axleInfos;
@@ -25,6 +27,7 @@ public class CarController : MonoBehaviour {
     private Rigidbody _rb;
 
     public static uint numChildren;
+    public static uint totalNumChildrenDroppedOff;
 
     public static void pickUp(uint numChildrenPickingUp){
 
@@ -32,7 +35,9 @@ public class CarController : MonoBehaviour {
     }
 
     public static void dropOff(){
-
+        
+        Debug.Log("Dropping Off: " + numChildren);
+        totalNumChildrenDroppedOff += numChildren;
         numChildren = 0;
     }
 
@@ -71,7 +76,7 @@ public class CarController : MonoBehaviour {
         //Debug
         //
 
-        //Debug.Log(numChildren);
+        Debug.Log(numChildren);
         //Debug.Log("Vertical Input: " + verticalInput + "------- Horizontal Input: " + horizontalInput);
 
 
