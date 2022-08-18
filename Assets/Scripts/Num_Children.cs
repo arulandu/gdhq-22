@@ -11,6 +11,6 @@ public class Num_Children : MonoBehaviour
     //just update the UI each frame not much to say really
     void Update(){
 
-        numChildrenText.text = CarController.numChildren.ToString();
+        numChildrenText.text = /*CarController*/cardrive.numChildren.ToString();
     }
 }

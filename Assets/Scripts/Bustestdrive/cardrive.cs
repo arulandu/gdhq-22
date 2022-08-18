@@ -4,6 +4,23 @@ using UnityEngine;
 
 public class cardrive : MonoBehaviour {
 
+
+	public static uint numChildren;
+    public static uint totalNumChildrenDroppedOff;
+
+    public static void pickUp(uint numChildrenPickingUp){
+
+        numChildren += numChildrenPickingUp;
+    }
+
+    public static void dropOff(){
+        
+        Debug.Log("Dropping Off: " + numChildren);
+        totalNumChildrenDroppedOff += numChildren;
+        numChildren = 0;
+    }
+
+
 	public void GetInput()
 	{
 		m_horizontalInput = Input.GetAxis("Horizontal");

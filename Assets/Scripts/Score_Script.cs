@@ -46,15 +46,15 @@ public class Score_Script : MonoBehaviour
 
     void FixedUpdate(){
 
-        Debug.Log(CarController.totalNumChildrenDroppedOff);
+        Debug.Log(/*CarController*/cardrive.totalNumChildrenDroppedOff);
         
         //make sure that the player doesn't have negative points
-        if ((scoreAdder + ((float)CarController.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier)) <= 0)
+        if ((scoreAdder + ((float)/*CarController*/cardrive.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier)) <= 0)
             score = 0;
 
         //apply the points formula
         else
-            score = (uint) (scoreAdder + ((float)CarController.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier));
+            score = (uint) (scoreAdder + ((float)/*CarController*/ cardrive.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier));
         
         
         scoreText.text = score.ToString() + "pt";
