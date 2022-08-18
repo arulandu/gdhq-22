@@ -106,7 +106,7 @@ public class Procedural_City_Generation : MonoBehaviour
         float yPos;
         float zPos;
 
-        //length width and height just cause they are useful things to have as a reference
+        //length and width just cause they are useful things to have as a reference
         uint width;
         uint length;
 
@@ -201,7 +201,7 @@ public class Procedural_City_Generation : MonoBehaviour
             
             building build = new building(15f, 2f, 10f,   10, 10, 10,   2,   this);
             building build1 = new building(-15f, 2f, 10f,   10, 10, 10,   2,   this);
-            straightStreet street1 = new straightStreet(0f, 3f, -10f,   3, 10,   2,   this);
+            straightStreet street1 = new straightStreet(0f, 2f, -10f,   3, 10,   2,   this);
     }
 
 
