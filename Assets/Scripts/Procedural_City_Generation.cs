@@ -8,8 +8,13 @@ public class Procedural_City_Generation : MonoBehaviour
     //array of all of the cityElements (models) that can be set in the editor
     public GameObject[] cityElements = new GameObject[19];
 
-    public Quaternion building_wall_quaternion;
-    public Quaternion building_base_quaternion;
+
+    //set quaternions that will be useful when instantiating specific gameObjects
+    public Quaternion defaultQuaternion; //default 0, 0, 0 quaternion
+    public Quaternion buildingWallQuaternion; //these for some reason need their own rotation so here it is
+    public Quaternion defaultStreetQuaternion; //default for regular street objects
+    public Quaternion leftStreetQuaternion; //streets that are on the far left (we only have one model for street side)
+    public Quaternion rightStreetQuaternion; //streets that are on the far right (we only have one model for street side)
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -38,21 +43,31 @@ public class Procedural_City_Generation : MonoBehaviour
     //a building represents a 3 dimensional array of building objects each of which are cubical
     struct building{
 
-        //length width and height just cause they are useful things to have as a reference
-        int width;
-        int height;
-        int length;
+        //xyz coord
+        float xPos;
+        float yPos;
+        float zPos;
 
-        int tileSize; //how large the 3d model is in world space 
+        //length width and height just cause they are useful things to have as a reference
+        uint width;
+        uint height;
+        uint length;
+
+        uint tileSize; //how large the 3d model is in world space 
 
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the building
+
+        Quaternion usedQuaternion; //a reference to the rotation quaternion that is currently being used to generate the thing
 
         GameObject[ , , ] buildingArray; //WTHHHHHHHHH IS THIS SYNTAX I HATE IT HERE but this represents the full building as a 3d array of gameObjects
 
 
-        public building (float xPos, float yPos,    float zPos, int width_, int height_, int length_,    int tileSize_,    Procedural_City_Generation thisClass) : this(){
+        public building (float xPos_, float yPos_, float zPos_,    uint width_, uint height_, uint length_,    uint tileSize_,    Procedural_City_Generation thisClass) : this(){
             
-            //set the variables of the building's width, length, and height (and also tilesize) based on what was passed
+            //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
+            xPos = xPos_;
+            yPos = yPos_;
+            zPos = zPos_;
             width = width_;
             height = height_;
             length = length_;
@@ -61,9 +76,9 @@ public class Procedural_City_Generation : MonoBehaviour
             buildingArray = new GameObject[width, height, length]; //represents the building made of 3d tile GameObjects
 
             //loop through the whole array and instantiate 3d tiles accordingly
-            for(int xIndex = 0; xIndex < width; xIndex++){
+            for(uint xIndex = 0; xIndex < width; xIndex++){
 
-                for (int yIndex = 0; yIndex < height; yIndex++){
+                for (uint yIndex = 0; yIndex < height; yIndex++){
 
                     //for each y index above 0, the tile that you procedurally generate the building with should be windows
                     //there is probably a better way to do this but whatever 
@@ -73,13 +88,110 @@ public class Procedural_City_Generation : MonoBehaviour
                         usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.building_wall];
 
 
-                    for (int zIndex = 0; zIndex < length; zIndex++){
+                    for (uint zIndex = 0; zIndex < length; zIndex++){
                         
-                        buildingArray[xIndex, yIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().building_wall_quaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
+                        buildingArray[xIndex, yIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingWallQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
                     }
                 }
             }
         }   
+    }
+
+
+    //this represents a straight strip of street without any turns 
+    struct straightStreet {
+
+        //xyz coord
+        float xPos;
+        float yPos;
+        float zPos;
+
+        //length width and height just cause they are useful things to have as a reference
+        uint width;
+        uint length;
+
+        uint tileSize; //how large the 3d model is in world space 
+
+        GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the street
+
+        Quaternion usedQuaternion; //a reference to the rotation quaternion that is currently being used to generate the thing
+
+        GameObject [ , ] streetArray; //represents a street in a 2d array made out of (mostly) 2d models
+
+
+        public straightStreet (float xPos_, float yPos_, float zPos_,    uint width_, uint length_,    uint tileSize_,    Procedural_City_Generation thisClass) : this(){
+
+            //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
+            xPos = xPos_;
+            yPos = yPos_;
+            zPos = zPos_;
+            width = width_;
+            length = length_;
+            tileSize = tileSize_;
+
+            streetArray = new GameObject[width, length]; //represents the street made of (mostly) 2d tile GameObjects
+
+
+            //loop through the whole array and instantiate accordingly
+            for (uint xIndex = 0; xIndex < width; xIndex++){
+
+                for (uint zIndex = 0; zIndex < length; zIndex++){
+
+                    //check if this tile is on the far left or the far right of the street. If so, use the appropriate model when constructing this
+                    if (xIndex == 0) {
+
+                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.streetside];
+                        usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().leftStreetQuaternion;
+                    } 
+
+                    else if (xIndex == (width - 1)){
+                        
+                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.streetside];
+                        usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().rightStreetQuaternion;
+                    }
+
+                    else {
+
+                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.street];
+                        usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().defaultStreetQuaternion;
+                    }
+
+                    //INSTANTIATE
+                    streetArray[xIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos, zPos + (zIndex * tileSize)), usedQuaternion); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
+                }
+            }
+
+
+        }
+    }
+
+
+    
+    struct leftTurnStreet {
+
+    }
+
+
+
+    struct rightTurnStreet {
+
+    }
+
+
+
+    struct leftThreeWayIntersection{
+
+    }
+
+
+
+    struct rightThreeWayIntersection{
+
+    }
+
+
+
+    struct fourWayIntersection {
 
     }
 
@@ -87,7 +199,9 @@ public class Procedural_City_Generation : MonoBehaviour
 
     void Awake(){
             
-            building build = new building(10f, 2f, 10f,   10, 10, 10,   2,   this);
+            building build = new building(15f, 2f, 10f,   10, 10, 10,   2,   this);
+            building build1 = new building(-15f, 2f, 10f,   10, 10, 10,   2,   this);
+            straightStreet street1 = new straightStreet(0f, 3f, -10f,   3, 10,   2,   this);
     }
 
 
