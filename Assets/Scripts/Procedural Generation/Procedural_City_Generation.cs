@@ -5,6 +5,13 @@ using UnityEngine;
 public class Procedural_City_Generation : MonoBehaviour
 {
 
+    //
+    //
+    //CONVERT ALL OF THIS TO A GRID BASED FORMAT 
+    //
+    //
+
+
     //array of all of the cityElements (models) that can be set in the editor
     public GameObject[] cityElements = new GameObject[19];
 
@@ -15,6 +22,9 @@ public class Procedural_City_Generation : MonoBehaviour
     public Quaternion defaultStreetQuaternion; //default for regular street objects
     public Quaternion leftStreetQuaternion; //streets that are on the far left (we only have one model for street side)
     public Quaternion rightStreetQuaternion; //streets that are on the far right (we only have one model for street side)
+    public Quaternion leftTurnStreetBaseQuaternion; //the start of the turn
+    public Quaternion leftTurnStreetTurnQuaternion; //the actua
+    public Quaternion leftTurnStreetExitQuaternion; //
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -40,6 +50,9 @@ public class Procedural_City_Generation : MonoBehaviour
         tree = 18
     }
 
+    public const int roadWidth = 3; //width of the road
+
+
     //a building represents a 3 dimensional array of building objects each of which are cubical
     struct building{
 
@@ -53,7 +66,7 @@ public class Procedural_City_Generation : MonoBehaviour
         uint height;
         uint length;
 
-        uint tileSize; //how large the 3d model is in world space 
+        float tileSize; //how large the 3d model is in world space 
 
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the building
 
@@ -62,7 +75,7 @@ public class Procedural_City_Generation : MonoBehaviour
         GameObject[ , , ] buildingArray; //WTHHHHHHHHH IS THIS SYNTAX I HATE IT HERE but this represents the full building as a 3d array of gameObjects
 
 
-        public building (float xPos_, float yPos_, float zPos_,    uint width_, uint height_, uint length_,    uint tileSize_,    Procedural_City_Generation thisClass) : this(){
+        public building (float xPos_, float yPos_, float zPos_,    uint width_, uint height_, uint length_,    float tileSize_,    Procedural_City_Generation thisClass) : this(){
             
             //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
             xPos = xPos_;
@@ -110,7 +123,7 @@ public class Procedural_City_Generation : MonoBehaviour
         uint width;
         uint length;
 
-        uint tileSize; //how large the 3d model is in world space 
+        float tileSize; //how large the 3d model is in world space 
 
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the street
 
@@ -119,7 +132,7 @@ public class Procedural_City_Generation : MonoBehaviour
         GameObject [ , ] streetArray; //represents a street in a 2d array made out of (mostly) 2d models
 
 
-        public straightStreet (float xPos_, float yPos_, float zPos_,    uint width_, uint length_,    uint tileSize_,    Procedural_City_Generation thisClass) : this(){
+        public straightStreet (float xPos_, float yPos_, float zPos_,    uint width_, uint length_,    float tileSize_,    Procedural_City_Generation thisClass) : this(){
 
             //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
             xPos = xPos_;
@@ -152,7 +165,7 @@ public class Procedural_City_Generation : MonoBehaviour
 
                     else {
 
-                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.street];
+                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.street_dotted];
                         usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().defaultStreetQuaternion;
                     }
 
@@ -167,16 +180,37 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
     
-    struct leftTurnStreet {
+    struct turnStreet {
 
+        //xyz coord
+        float xPos;
+        float yPos;
+        float zPos;
+
+        float tileSize; //how large the 3d model is in world space 
+        
+        GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the street
+
+
+        public turnStreet(float xPos, float yPos, float zPos,    uint width,    uint tileSize_,    Procedural_City_Generation thisClass) : this() {
+
+            xPos = xPos_;
+            yPos = yPos_;
+            zPos = zPos_;
+
+            usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.building_base];
+
+
+            for (int xIndex = 0; xIndex < width; xIndex++) {
+                for(int zIndex = 0; zIndex < width; zIndex++) {
+
+                    Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos, zPos + (zIndex * tileSize)), Quaternion.identity); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
+                }
+            }
+
+            
+        }
     }
-
-
-
-    struct rightTurnStreet {
-
-    }
-
 
 
     struct leftThreeWayIntersection{
