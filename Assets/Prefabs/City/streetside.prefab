@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3151531813093391374}
   - component: {fileID: 2995795633668586650}
   - component: {fileID: 8033604692137244425}
-  - component: {fileID: -8260651610336647363}
   m_Layer: 0
   m_Name: streetside
   m_TagString: Untagged
@@ -85,16 +84,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-8260651610336647363
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766321230478197345}
-  m_Material: {fileID: 13400000, guid: 5a7d9c54ca120f9448258328b41ba376, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 1.9999998, z: 0.024999997}
-  m_Center: {x: 0, y: 0, z: 0.012499998}
