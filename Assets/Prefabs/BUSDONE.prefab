@@ -1183,8 +1183,8 @@ GameObject:
   - component: {fileID: 517474997014465060}
   - component: {fileID: 4820347857609793687}
   - component: {fileID: 4820347857609793685}
-  - component: {fileID: 7006342364649415971}
   - component: {fileID: -5702757755584920338}
+  - component: {fileID: -4025628501257624}
   m_Layer: 0
   m_Name: BUSDONE
   m_TagString: Untagged
@@ -1238,34 +1238,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.32175004, y: 0.26393294, z: 1.4498837}
   m_Center: {x: 0.0002564788, y: 0.24044898, z: -0.20283854}
---- !u!114 &7006342364649415971
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8798940840894239644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a62b7dfa04e704940bb2c7500f266d5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  axleInfos:
-  - leftWheel: {fileID: 6433072194559630288, guid: 224dda4fd8a998045abd750455ed1333,
-      type: 3}
-    rightWheel: {fileID: 8281843822325493466, guid: 224dda4fd8a998045abd750455ed1333,
-      type: 3}
-    motor: 1
-    steering: 1
-  - leftWheel: {fileID: 8281843821628730683, guid: 224dda4fd8a998045abd750455ed1333,
-      type: 3}
-    rightWheel: {fileID: 8281843821755609522, guid: 224dda4fd8a998045abd750455ed1333,
-      type: 3}
-    motor: 1
-    steering: 0
-  antiRoll: 5000
-  maxMotorTorque: 0
-  maxSteeringAngle: 0
 --- !u!114 &-5702757755584920338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1297,3 +1269,25 @@ MonoBehaviour:
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &-4025628501257624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798940840894239644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 841bbdc29ccfe8f429027a9c709b5060, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontDriverW: {fileID: 4820347856549639025}
+  frontPassengerW: {fileID: 4820347858104729612}
+  rearDriverW: {fileID: 4820347856959188111}
+  rearPassengerW: {fileID: 4820347858152803005}
+  frontDriverT: {fileID: 4820347856549639024}
+  frontPassengerT: {fileID: 4820347858104729615}
+  rearDriverT: {fileID: 4820347856959188110}
+  rearPassengerT: {fileID: 4820347858152803004}
+  maxSteerAngle: 30
+  motorForce: 300

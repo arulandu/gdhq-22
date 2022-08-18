@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Procedural_City_Generation : MonoBehaviour
 {
-    //array of all of the cityElements (models)
-    public static GameObject[] cityElements = new GameObject[19];
+
+    //array of all of the cityElements (models) that can be set in the editor
+    public GameObject[] cityElements = new GameObject[19];
+
+    public Quaternion building_wall_quaternion;
+    public Quaternion building_base_quaternion;
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -39,14 +43,14 @@ public class Procedural_City_Generation : MonoBehaviour
         int height;
         int length;
 
-        int tileSize; //how large the 3d is (just in case)
+        int tileSize; //how large the 3d model is in world space 
 
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the building
 
         GameObject[ , , ] buildingArray; //WTHHHHHHHHH IS THIS SYNTAX I HATE IT HERE but this represents the full building as a 3d array of gameObjects
 
 
-        public building (int width_, int height_, int length_, int tileSize_) : this(){
+        public building (float xPos, float yPos,    float zPos, int width_, int height_, int length_,    int tileSize_,    Procedural_City_Generation thisClass) : this(){
             
             //set the variables of the building's width, length, and height (and also tilesize) based on what was passed
             width = width_;
@@ -63,25 +67,28 @@ public class Procedural_City_Generation : MonoBehaviour
 
                     //for each y index above 0, the tile that you procedurally generate the building with should be windows
                     //there is probably a better way to do this but whatever 
-                    if (xIndex == 0)
-                        usedTile = cityElements[(int)cityElementsNames.building_wall];
+                    if (yIndex == 0)
+                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.building_base];
                     else
-                        usedTile = cityElements[(int)cityElementsNames.bricks_window];
+                        usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.building_wall];
 
 
                     for (int zIndex = 0; zIndex < length; zIndex++){
                         
-                        buildingArray[xIndex, yIndex, zIndex] = Instantiate (usedTile, new Vector3 (xIndex * tileSize, yIndex * tileSize, zIndex * tileSize), Quaternion.identity); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
+                        buildingArray[xIndex, yIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().building_wall_quaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
                     }
                 }
             }
         }   
+
     }
 
 
 
-    
-
+    void Awake(){
+            
+            building build = new building(10f, 2f, 10f,   10, 10, 10,   2,   this);
+    }
 
 
 }
