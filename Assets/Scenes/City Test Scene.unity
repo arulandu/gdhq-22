@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -254,26 +254,27 @@ MonoBehaviour:
   - {fileID: 1361817153574184781, guid: 1467b70b401909f4481b088cf5e7233f, type: 3}
   - {fileID: 6061846830123465589, guid: ef8027ebbe6029d4c87cafeeb9d3f2ad, type: 3}
   - {fileID: 4030488081185711174, guid: 2f78307305cb11f41986b06e48d60a99, type: 3}
-  - {fileID: 8628688013912742216, guid: 65c9aea2c2140d843bc95c71d1f1fc6c, type: 3}
+  - {fileID: 919132149155446097, guid: da442836b24fa5e4588c66bf7ed95fc9, type: 3}
   - {fileID: 8691350594826261696, guid: afa6466505981344eb96f0b82148e035, type: 3}
   - {fileID: 5385420879552721738, guid: 82d9f58ddd5da1a4483d752ed04f3a6d, type: 3}
-  - {fileID: 6359600068522200322, guid: 84487fe1d8d051043bf8f35a19087daa, type: 3}
-  - {fileID: 277645090096471375, guid: 440499f3625964c4ab0ab998f3f7dff2, type: 3}
+  - {fileID: -2932666283545867464, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
+  - {fileID: -2749741416062063435, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
   - {fileID: 1337920153388061241, guid: dc369debc275aff48a981c193646a1be, type: 3}
   - {fileID: 763694802305339040, guid: 7d90791305ed7064c81653067d4523c9, type: 3}
   - {fileID: 4731655809988939674, guid: ead8daa98443eb94e9393329718df976, type: 3}
-  - {fileID: 1300986769343457966, guid: ce98ca9cf9440024e990ab8935a2d2f9, type: 3}
-  - {fileID: 6145220444390966009, guid: b790069d34247a54ba7556f321394106, type: 3}
-  - {fileID: 7501924981645236044, guid: c6246167c78338848900e37c27e2781d, type: 3}
-  - {fileID: 4466486169123073779, guid: f9670379fd7d5d349a2abfda6011949f, type: 3}
-  - {fileID: 1251360312158338168, guid: b26c9e4338f9b7b4f9233c5caab7a6a9, type: 3}
-  - {fileID: 766321230478197345, guid: 3152b49b8a8b31b44ab4355963c73217, type: 3}
-  - {fileID: 7492017897260668505, guid: e570f4ce8e1644545a2c1917a09f8e5a, type: 3}
+  - {fileID: 8194640432686633642, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
+  - {fileID: -2102100501728033312, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
+  - {fileID: 1522994613357417322, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
+  - {fileID: 6475300089769195459, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
+  - {fileID: -9047923386069689313, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
+  - {fileID: 9164379332029601787, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
+  - {fileID: -4987324102601810599, guid: f224a9ca019e3094787399c1b1e1a571, type: 3}
   - {fileID: 4256543260884320315, guid: 084332b40a55c3240852753369ba91da, type: 3}
   defaultQuaternion: {x: 0, y: 0, z: 0, w: 0}
   buildingWallQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  defaultStreetQuaternion: {x: 0, y: 0, z: 0, w: 0}
   leftStreetQuaternion: {x: 0, y: 0, z: 0, w: 0}
-  rightStreetQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  rightStreetQuaternion: {x: 0, y: 1, z: 0, w: -0.00000004371139}
 --- !u!4 &635695790
 Transform:
   m_ObjectHideFlags: 0
