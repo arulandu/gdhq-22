@@ -1,9 +1,36 @@
 // using System.Collections;
 // using System.Collections.Generic;
 using UnityEngine;
+using System;
+
+
+//
+//NOTES:
+//
+//Ok so this algorithm is decently awkward
+//There is another option that I think is reasonable if you guys want to do it
+//We would generate a bunch of vertical and horizontal straight streets and then just take where they intersect and create an intersection
+//We could lock the generation so that each of the roads have to be x width apart, which I think could work very well tbh
+//What do you guys think?
+//The current one makes more natural roads while the other one would be a good bit easier to implement (not like an incredible difference in dificulty but enough to mention)
+//
+//We could also use the L-system (https://www.youtube.com/watch?v=75-yKBDO9yo&t=9s)
+//
+//Other than these algorithms, we could use a noise based on like perlin noise but I don't think that would work very well for our purposes and I think its better to just stick with this
+//
+
+
+
 
 public class Procedural_City_Generation : MonoBehaviour
 {
+
+    //
+    //
+    //CONVERT ALL OF THIS TO A GRID BASED FORMAT 
+    //
+    //
+
 
     //array of all of the cityElements (models) that can be set in the editor
     public GameObject[] cityElements = new GameObject[19];
@@ -15,7 +42,21 @@ public class Procedural_City_Generation : MonoBehaviour
     public Quaternion defaultStreetQuaternion; //default for regular street objects
     public Quaternion leftStreetQuaternion; //streets that are on the far left (we only have one model for street side)
     public Quaternion rightStreetQuaternion; //streets that are on the far right (we only have one model for street side)
-    public Quaternion buildingBaseQuaternion;
+    /*public Quaternion leftTurnStreetBaseQuaternion; //the start of the turn
+    public Quaternion leftTurnStreetTurnQuaternion; //the
+    public Quaternion leftTurnStreetExitQuaternion; */
+
+
+    //stats (cannot be tweaked in the editor must be tweaked in script)
+    public static int roadWidth {get;} = 3; //width of the road in tiles 
+    public static double tileSize {get;} = 2.0; //the size of tiles in the gameWorld
+    public static int maxPropogation {get;} = 1000; //the maximum number of times that one thread can propogate (determines the size of the map)
+    public static int propogationLock {get;} = 6; //after an intersection is created, this is the number of propogations before the algorithm is able to roll for a new intersection
+    public static int fourWayIntersectionGenerationProbability {get;} = 30; //this is the number that determines the probability of a 4 way intersection every tiling (higher number lower probability)
+
+
+    static System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
+        
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -41,6 +82,7 @@ public class Procedural_City_Generation : MonoBehaviour
         tree = 18
     }
 
+
     //a building represents a 3 dimensional array of building objects each of which are cubical
     struct building{
 
@@ -54,7 +96,7 @@ public class Procedural_City_Generation : MonoBehaviour
         uint height;
         uint length;
 
-        uint tileSize; //how large the 3d model is in world space 
+        float tileSize; //how large the 3d model is in world space 
 
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the building
 
@@ -63,7 +105,7 @@ public class Procedural_City_Generation : MonoBehaviour
         GameObject[ , , ] buildingArray; //WTHHHHHHHHH IS THIS SYNTAX I HATE IT HERE but this represents the full building as a 3d array of gameObjects
 
 
-        public building (float xPos_, float yPos_, float zPos_,    uint width_, uint height_, uint length_,    uint tileSize_,    Procedural_City_Generation thisClass) : this(){
+        public building (float xPos_, float yPos_, float zPos_,    uint width_, uint height_, uint length_,    float tileSize_,    Procedural_City_Generation thisClass) : this(){
             
             //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
             xPos = xPos_;
@@ -90,10 +132,8 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
                     for (uint zIndex = 0; zIndex < length; zIndex++){
-                        if (yIndex == 0)
-                            buildingArray[xIndex, yIndex, zIndex] = Instantiate(usedTile, new Vector3(xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingBaseQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
-                        else
-                            buildingArray[xIndex, yIndex, zIndex] = Instantiate(usedTile, new Vector3(xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingWallQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
+                        
+                        buildingArray[xIndex, yIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingWallQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
                     }
                 }
             }
@@ -113,7 +153,7 @@ public class Procedural_City_Generation : MonoBehaviour
         uint width;
         uint length;
 
-        uint tileSize; //how large the 3d model is in world space 
+        float tileSize; //how large the 3d model is in world space 
 
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the street
 
@@ -122,7 +162,7 @@ public class Procedural_City_Generation : MonoBehaviour
         GameObject [ , ] streetArray; //represents a street in a 2d array made out of (mostly) 2d models
 
 
-        public straightStreet (float xPos_, float yPos_, float zPos_,    uint width_, uint length_,    uint tileSize_,    Procedural_City_Generation thisClass) : this(){
+        public straightStreet (float xPos_, float yPos_, float zPos_,    uint width_, uint length_,    float tileSize_,    Procedural_City_Generation thisClass) : this(){
 
             //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
             xPos = xPos_;
@@ -170,16 +210,37 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
     
-    struct leftTurnStreet {
+    struct turnStreet {
 
+        //xyz coord
+        float xPos;
+        float yPos;
+        float zPos;
+
+        float tileSize; //how large the 3d model is in world space 
+        
+        GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the street
+
+
+        public turnStreet(float xPos_, float yPos_, float zPos_,    uint width,    uint tileSize_,    Procedural_City_Generation thisClass) : this() {
+
+            xPos = xPos_;
+            yPos = yPos_;
+            zPos = zPos_;
+
+            usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.building_base];
+
+
+            for (int xIndex = 0; xIndex < width; xIndex++) {
+                for(int zIndex = 0; zIndex < width; zIndex++) {
+
+                    Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos, zPos + (zIndex * tileSize)), Quaternion.identity); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
+                }
+            }
+
+            
+        }
     }
-
-
-
-    struct rightTurnStreet {
-
-    }
-
 
 
     struct leftThreeWayIntersection{
@@ -195,6 +256,77 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
     struct fourWayIntersection {
+
+    }
+
+
+    //for this point on the grid, is there a road tile
+    //find this out by iterating through an array of all of all of the streets and checking their positions
+    //
+    //PLS SOMEONE OPTIMIZE THIS UNLESS YOU GUYS WANT A DEDICATED LOADING SCREEN FOR THIS ALGORITHM
+    //
+    public static bool streetExists (int xPos, int zPos) {
+        return false;
+    }
+
+
+    //propogate tiles and split off into different branches until a specified limit or the branch hits an already built road
+    //initially propogate in the z = -1 and z = 1 directions
+    //Once an intersection is created, make sure that it can't create another intersection until int propogationLock
+    //Use recursion (WAIT HOLD UP ur telling me that AP CS was ACTUALLY useful... im not buying it)
+    //if you hit an already built road and it is a normal road, tranform it into a turn
+    //if you hit an already built road and it is a turn, transform it into a 3 way intersection and so on
+    public static void generateStreet(){
+        
+    }
+
+
+    //recursive method that is called whenever a new branch
+    //xDir and zDir can only be set to -1, 0, and 1 to denote how to propogate from its local starting point
+    public static void branchStreet(int xPos_, int zPos_, int xDir, int zDir, int lockPropogations) {
+
+        bool isLocked = false;
+        int lockCountDown = lockPropogations; //is this necesary?
+
+        int xPos = xPos_;
+        int zPos = zPos_;
+
+
+        //end branch if you run into another road
+        if (streetExists(xPos, zPos)) {
+
+            //create a turn or whatever at that position 
+            //SOMETHING SOMETHING CODE
+
+            //end this branch
+            return;
+        }
+
+        //create a four way intersection
+        else if (random.Next(0, fourWayIntersectionGenerationProbability) == 0 && !isLocked) {
+           
+            /*ranchStreet (xPos + xDir, zPos + zDir, );
+            branchStreet (xPos - xDir, zPos + zDir, );
+            branchStreet (xPos + xDir, zPos - zDir, );
+            branchStreet (xPos - xDir, zPos - zDir, );*/
+        }
+
+        //continue straight
+        else {
+
+        }
+
+    }
+
+
+    //call this either after every street is already made to just go through all of the streets and place sidewalk tiles on their sides
+    public static void generateSideWalk(){
+
+    }
+
+
+    //call this after after every street (and sidewalk) is already made to just go through all of the empty (untouched space) and place a building there
+    public static void generateBuildings(){
 
     }
 
