@@ -13,6 +13,7 @@ using System;
 //We could lock the generation so that each of the roads have to be x width apart, which I think could work very well tbh
 //What do you guys think?
 //
+//Other than these algorithms, we could use a noise based on like perlin noise but I don't think that would work very well for our purposes and I think its better to just stick with this
 //
 
 
