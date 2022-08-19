@@ -1,6 +1,22 @@
 // using System.Collections;
 // using System.Collections.Generic;
 using UnityEngine;
+using System;
+
+
+//
+//NOTES:
+//
+//Ok so this algorithm is decently awkward
+//There is another option that I think is reasonable if you guys want to do it
+//We would generate a bunch of vertical and horizontal straight streets and then just take where they intersect and create an intersection
+//We could lock the generation so that each of the roads have to be x width apart, which I think could work very well tbh
+//What do you guys think?
+//
+//
+
+
+
 
 public class Procedural_City_Generation : MonoBehaviour
 {
@@ -22,9 +38,21 @@ public class Procedural_City_Generation : MonoBehaviour
     public Quaternion defaultStreetQuaternion; //default for regular street objects
     public Quaternion leftStreetQuaternion; //streets that are on the far left (we only have one model for street side)
     public Quaternion rightStreetQuaternion; //streets that are on the far right (we only have one model for street side)
-    public Quaternion leftTurnStreetBaseQuaternion; //the start of the turn
-    public Quaternion leftTurnStreetTurnQuaternion; //the actua
-    public Quaternion leftTurnStreetExitQuaternion; //
+    /*public Quaternion leftTurnStreetBaseQuaternion; //the start of the turn
+    public Quaternion leftTurnStreetTurnQuaternion; //the
+    public Quaternion leftTurnStreetExitQuaternion; */
+
+
+    //stats that can be tweeked in the editor
+    public int roadWidth {get;} = 3; //width of the road in tiles 
+    public double tileSize {get;} = 2.0; //the size of tiles in the gameWorld
+    public int maxPropogation {get;} = 1000; //the maximum number of times that one thread can propogate (determines the size of the map)
+    public int propogationLock {get;} = 6; //after an intersection is created, this is the number of propogations before the algorithm is able to roll for a new intersection
+    public int fourWayIntersectionGenerationProbability {get;} = 30; //this is the number that determines the probability of a 4 way intersection every tiling (higher number lower probability)
+
+
+    System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
+        
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -49,8 +77,6 @@ public class Procedural_City_Generation : MonoBehaviour
         streetside_yellow = 17,
         tree = 18
     }
-
-    public const int roadWidth = 3; //width of the road
 
 
     //a building represents a 3 dimensional array of building objects each of which are cubical
@@ -226,6 +252,39 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
     struct fourWayIntersection {
+
+    }
+
+
+    //propogate tiles and split off into different branches until a specified limit or the branch hits an already built road
+    //initially propogate in the z = -1 and z = 1 directions
+    //Once an intersection is created, make sure that it can't create another intersection until int propogationLock
+    //Use recursion (WAIT HOLD UP ur telling me that AP CS was ACTUALLY useful... im not buying it)
+    //if you hit an already built road and it is a normal road, tranform it into a turn
+    //if you hit an already built road and it is a turn, transform it into a 3 way intersection and so on
+    public static void generateStreet(){
+        
+    }
+
+
+    //recursive method that is called whenever a new branch
+    //xDir and zDir can only be set to -1 and 1 to denote how to propogate from its local starting point
+    public static void branchStreet(int xDir, int zDir){
+
+        bool isLocked = false;
+
+
+    }
+
+
+    //call this either after every street is already made to just go through all of the streets and place sidewalk tiles on their sides
+    public static void generateSideWalk(){
+
+    }
+
+
+    //call this after after every street (and sidewalk) is already made to just go through all of the empty (untouched space) and place a building there
+    public static void generateBuildings(){
 
     }
 
