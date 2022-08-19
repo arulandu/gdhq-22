@@ -12,6 +12,9 @@ using System;
 //We would generate a bunch of vertical and horizontal straight streets and then just take where they intersect and create an intersection
 //We could lock the generation so that each of the roads have to be x width apart, which I think could work very well tbh
 //What do you guys think?
+//The current one makes more natural roads while the other one would be a good bit easier to implement (not like an incredible difference in dificulty but enough to mention)
+//
+//We could also use the L-system (https://www.youtube.com/watch?v=75-yKBDO9yo&t=9s)
 //
 //Other than these algorithms, we could use a noise based on like perlin noise but I don't think that would work very well for our purposes and I think its better to just stick with this
 //
@@ -44,15 +47,15 @@ public class Procedural_City_Generation : MonoBehaviour
     public Quaternion leftTurnStreetExitQuaternion; */
 
 
-    //stats that can be tweeked in the editor
-    public int roadWidth {get;} = 3; //width of the road in tiles 
-    public double tileSize {get;} = 2.0; //the size of tiles in the gameWorld
-    public int maxPropogation {get;} = 1000; //the maximum number of times that one thread can propogate (determines the size of the map)
-    public int propogationLock {get;} = 6; //after an intersection is created, this is the number of propogations before the algorithm is able to roll for a new intersection
-    public int fourWayIntersectionGenerationProbability {get;} = 30; //this is the number that determines the probability of a 4 way intersection every tiling (higher number lower probability)
+    //stats (cannot be tweaked in the editor must be tweaked in script)
+    public static int roadWidth {get;} = 3; //width of the road in tiles 
+    public static double tileSize {get;} = 2.0; //the size of tiles in the gameWorld
+    public static int maxPropogation {get;} = 1000; //the maximum number of times that one thread can propogate (determines the size of the map)
+    public static int propogationLock {get;} = 6; //after an intersection is created, this is the number of propogations before the algorithm is able to roll for a new intersection
+    public static int fourWayIntersectionGenerationProbability {get;} = 30; //this is the number that determines the probability of a 4 way intersection every tiling (higher number lower probability)
 
 
-    System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
+    static System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
         
 
     //the only reason this exists is to act as a reference to which index the city elements are in
@@ -257,6 +260,16 @@ public class Procedural_City_Generation : MonoBehaviour
     }
 
 
+    //for this point on the grid, is there a road tile
+    //find this out by iterating through an array of all of all of the streets and checking their positions
+    //
+    //PLS SOMEONE OPTIMIZE THIS UNLESS YOU GUYS WANT A DEDICATED LOADING SCREEN FOR THIS ALGORITHM
+    //
+    public static bool streetExists (int xPos, int zPos) {
+        return false;
+    }
+
+
     //propogate tiles and split off into different branches until a specified limit or the branch hits an already built road
     //initially propogate in the z = -1 and z = 1 directions
     //Once an intersection is created, make sure that it can't create another intersection until int propogationLock
@@ -269,11 +282,39 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
     //recursive method that is called whenever a new branch
-    //xDir and zDir can only be set to -1 and 1 to denote how to propogate from its local starting point
-    public static void branchStreet(int xDir, int zDir){
+    //xDir and zDir can only be set to -1, 0, and 1 to denote how to propogate from its local starting point
+    public static void branchStreet(int xPos_, int zPos_, int xDir, int zDir, int lockPropogations) {
 
         bool isLocked = false;
+        int lockCountDown = lockPropogations; //is this necesary?
 
+        int xPos = xPos_;
+        int zPos = zPos_;
+
+
+        //end branch if you run into another road
+        if (streetExists(xPos, zPos)) {
+
+            //create a turn or whatever at that position 
+            //SOMETHING SOMETHING CODE
+
+            //end this branch
+            return;
+        }
+
+        //create a four way intersection
+        else if (random.Next(0, fourWayIntersectionGenerationProbability) == 0 && !isLocked) {
+           
+            /*ranchStreet (xPos + xDir, zPos + zDir, );
+            branchStreet (xPos - xDir, zPos + zDir, );
+            branchStreet (xPos + xDir, zPos - zDir, );
+            branchStreet (xPos - xDir, zPos - zDir, );*/
+        }
+
+        //continue straight
+        else {
+
+        }
 
     }
 
