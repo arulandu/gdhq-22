@@ -20,9 +20,8 @@ public class CarController : MonoBehaviour {
     public float antiRoll = 5000.0f;
     public float maxMotorTorque;
     public float maxSteeringAngle;
-
-    public static float verticalInput;
-    public static float horizontalInput; 
+    public Transform cOM;
+    private Vector2 _dirInput;
 
     private Rigidbody _rb;
 
@@ -44,6 +43,13 @@ public class CarController : MonoBehaviour {
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _rb.centerOfMass = transform.InverseTransformPoint(cOM.position);
+    }
+
+    private void Update()
+    {
+        _dirInput.y = Input.GetAxis("Vertical");
+        _dirInput.x = Input.GetAxis("Horizontal");
     }
 
     private void OnDrawGizmos()
@@ -71,21 +77,8 @@ public class CarController : MonoBehaviour {
      
     public void FixedUpdate()
     {
-
-        //
-        //Debug
-        //
-
-        Debug.Log(numChildren);
-        //Debug.Log("Vertical Input: " + verticalInput + "------- Horizontal Input: " + horizontalInput);
-
-
-        //
-        //Actual Code
-        //
-
-        float motor = maxMotorTorque * verticalInput;
-        float steering = maxSteeringAngle * horizontalInput;
+        float motor = maxMotorTorque * _dirInput.y;
+        float steering = maxSteeringAngle * _dirInput.x;
      
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {

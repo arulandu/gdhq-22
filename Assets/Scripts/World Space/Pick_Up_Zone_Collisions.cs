@@ -22,7 +22,7 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
         if (collider == busCollider && alreadyVisited == false){
 
             alreadyVisited = true;
-            cardrive.pickUp(numChildrenAtPickUp);
+            CarController.pickUp(numChildrenAtPickUp);
         }
         
     }
