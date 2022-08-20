@@ -10,6 +10,7 @@ public class Drop_Zone_Collisions : MonoBehaviour
     void OnTriggerEnter(Collider collider){
 
         if (collider == busCollider)
-            CarController.dropOff();
+            cardrive.dropOff();
+               
     }
 }

@@ -3,34 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
-//
-//NOTES:
-//
-//Ok so this algorithm is decently awkward
-//There is another option that I think is reasonable if you guys want to do it
-//We would generate a bunch of vertical and horizontal straight streets and then just take where they intersect and create an intersection
-//We could lock the generation so that each of the roads have to be x width apart, which I think could work very well tbh
-//What do you guys think?
-//The current one makes more natural roads while the other one would be a good bit easier to implement (not like an incredible difference in dificulty but enough to mention)
-//
-//We could also use the L-system (https://www.youtube.com/watch?v=75-yKBDO9yo&t=9s)
-//
-//Other than these algorithms, we could use a noise based on like perlin noise but I don't think that would work very well for our purposes and I think its better to just stick with this
-//
-
-
-
-
-public class Procedural_City_Generation : MonoBehaviour
-{
-
-    //
-    //
-    //CONVERT ALL OF THIS TO A GRID BASED FORMAT 
-    //
-    //
-
+public class Procedural_City_Generation : MonoBehaviour {
 
     //array of all of the cityElements (models) that can be set in the editor
     public GameObject[] cityElements = new GameObject[19];
@@ -86,7 +59,6 @@ public class Procedural_City_Generation : MonoBehaviour
         tree = 18
     } 
 
-
     //a building represents a 3 dimensional array of building objects each of which are cubical
     struct building {
 
@@ -100,7 +72,7 @@ public class Procedural_City_Generation : MonoBehaviour
         uint height;
         uint length;
 
-        float tileSize; //how large the 3d model is in world space 
+        uint tileSize; //how large the 3d model is in world space 
 
         GameObject usedTile; //a reference to the tile prefab that is currently being used to generate the building
 
@@ -109,7 +81,7 @@ public class Procedural_City_Generation : MonoBehaviour
         GameObject[ , , ] buildingArray; //WTHHHHHHHHH IS THIS SYNTAX I HATE IT HERE but this represents the full building as a 3d array of gameObjects
 
 
-        public building (float xPos_, float yPos_, float zPos_,    uint width_, uint height_, uint length_,    float tileSize_,    Procedural_City_Generation thisClass) : this(){
+        public building (float xPos_, float yPos_, float zPos_,    uint width_, uint height_, uint length_,    uint tileSize_,    Procedural_City_Generation thisClass) : this(){
             
             //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
             xPos = xPos_;
@@ -252,14 +224,12 @@ public class Procedural_City_Generation : MonoBehaviour
 
             for (int xIndex = 0; xIndex < width; xIndex++) {
                 for(int zIndex = 0; zIndex < width; zIndex++) {
-
-                    Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos, zPos + (zIndex * tileSize)), Quaternion.identity); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
                 }
             }
-
-            
         }
+
     }
+
 
 
     struct leftThreeWayIntersection{

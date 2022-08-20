@@ -27,7 +27,6 @@ public class Score_Script : MonoBehaviour
     public float timeMultiplier; //set in the editor and SHOULD be tweeked
     public float childrenMultiplier; //set in the editor and SHOULD be tweeked
     public float initialScore; //set in the editor and SHOULD be tweeked
-    public bool isInvisible = true; //can be tweaked in the editor
 
     private float scoreAdder; //score that you would need to add to start with the initial score that is desired
 
@@ -42,23 +41,20 @@ public class Score_Script : MonoBehaviour
         score = (uint)initialScore;
 
         scoreEffects = new Score_Effects(scoreText);
-
-        if (isInvisible)
-            this.gameObject.GetComponent<TextMeshProUGUI>().color = new Color (0, 0, 0, 0); //make the text transparent 
     }
     
 
     void FixedUpdate(){
 
-        Debug.Log(CarController.totalNumChildrenDroppedOff);
+        Debug.Log(/*CarController*/cardrive.totalNumChildrenDroppedOff);
         
         //make sure that the player doesn't have negative points
-        if ((scoreAdder + ((float)CarController.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier)) <= 0)
+        if ((scoreAdder + ((float)/*CarController*/cardrive.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier)) <= 0)
             score = 0;
 
         //apply the points formula
         else
-            score = (uint) (scoreAdder + ((float)CarController.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier));
+            score = (uint) (scoreAdder + ((float)/*CarController*/ cardrive.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier));
         
         
         scoreText.text = score.ToString() + "pt";
