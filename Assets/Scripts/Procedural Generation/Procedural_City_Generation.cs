@@ -1,5 +1,5 @@
-// using System.Collections;
-// using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -42,18 +42,22 @@ public class Procedural_City_Generation : MonoBehaviour
     public Quaternion defaultStreetQuaternion; //default for regular street objects
     public Quaternion leftStreetQuaternion; //streets that are on the far left (we only have one model for street side)
     public Quaternion rightStreetQuaternion; //streets that are on the far right (we only have one model for street side)
+    public Quaternion defaultStreetQuaternionSideways; //default for regular street objects (Sideways)
+    public Quaternion leftStreetQuaternionSideways; //streets that are on the far left (we only have one model for street side) (Sideways)
+    public Quaternion rightStreetQuaternionSideways; //streets that are on the far right (we only have one model for street side) (Sideways)
     /*public Quaternion leftTurnStreetBaseQuaternion; //the start of the turn
     public Quaternion leftTurnStreetTurnQuaternion; //the
     public Quaternion leftTurnStreetExitQuaternion; */
 
 
     //stats (cannot be tweaked in the editor must be tweaked in script)
-    public static int roadWidth {get;} = 3; //width of the road in tiles 
-    public static double tileSize {get;} = 2.0; //the size of tiles in the gameWorld
-    public static int maxPropogation {get;} = 1000; //the maximum number of times that one thread can propogate (determines the size of the map)
-    public static int propogationLock {get;} = 6; //after an intersection is created, this is the number of propogations before the algorithm is able to roll for a new intersection
+    public static uint roadWidth {get;} = 3; //width of the road in tiles 
+    public static float tileSize {get;} = 2; //the size of tiles in the gameWorld
+    public static int maxPropogation {get;} = 50; //the maximum number of times that one thread can propogate (determines the size of the map)
+    public static int propogationLock {get;} = 30; //after an intersection is created, this is the number of propogations before the algorithm is able to roll for a new intersection
     public static int fourWayIntersectionGenerationProbability {get;} = 30; //this is the number that determines the probability of a 4 way intersection every tiling (higher number lower probability)
-
+    public static int defaultYPos {get;} = 3;
+    static Dictionary <Vector2, GameObject> tileDictionary; //an map representing the positions of everything along the x and z axes
 
     static System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
         
@@ -80,11 +84,11 @@ public class Procedural_City_Generation : MonoBehaviour
         streetside = 16,
         streetside_yellow = 17,
         tree = 18
-    }
+    } 
 
 
     //a building represents a 3 dimensional array of building objects each of which are cubical
-    struct building{
+    struct building {
 
         //xyz coord
         float xPos;
@@ -133,7 +137,7 @@ public class Procedural_City_Generation : MonoBehaviour
 
                     for (uint zIndex = 0; zIndex < length; zIndex++){
                         
-                        buildingArray[xIndex, yIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingWallQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
+                        buildingArray[xIndex, yIndex, zIndex] = tileDictionary[new Vector2 (xIndex, zIndex)] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos + (yIndex * tileSize), zPos + (zIndex * tileSize)), thisClass.gameObject.GetComponent<Procedural_City_Generation>().buildingWallQuaternion); //instantiate the 3d array with tile objects in the correct position (depending on its position in the 3d array and its size)
                     }
                 }
             }
@@ -162,7 +166,7 @@ public class Procedural_City_Generation : MonoBehaviour
         GameObject [ , ] streetArray; //represents a street in a 2d array made out of (mostly) 2d models
 
 
-        public straightStreet (float xPos_, float yPos_, float zPos_,    uint width_, uint length_,    float tileSize_,    Procedural_City_Generation thisClass) : this(){
+        public straightStreet (float xPos_, float yPos_, float zPos_,    uint width_, uint length_,    int xDir, int zDir,   float tileSize_,    Procedural_City_Generation thisClass) : this(){
 
             //set the variables of the building's xyz, width, length, and height (and also tilesize) based on what was passed
             xPos = xPos_;
@@ -172,42 +176,57 @@ public class Procedural_City_Generation : MonoBehaviour
             length = length_;
             tileSize = tileSize_;
 
-            streetArray = new GameObject[width, length]; //represents the street made of (mostly) 2d tile GameObjects
+            streetArray = new GameObject[width, length + 1]; //represents the street made of (mostly) 2d tile GameObjects
 
-
+        
             //loop through the whole array and instantiate accordingly
             for (uint xIndex = 0; xIndex < width; xIndex++){
 
+                //zIndex = 1 is a case specific thing for length = 1 (fix later)
                 for (uint zIndex = 0; zIndex < length; zIndex++){
 
                     //check if this tile is on the far left or the far right of the street. If so, use the appropriate model when constructing this
                     if (xIndex == 0) {
-
+                        
                         usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.streetside];
-                        usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().leftStreetQuaternion;
+                        
+                        if (zDir != 0)
+                            usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().leftStreetQuaternion;
+                        else if (xDir != 0)
+                            usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().leftStreetQuaternionSideways;
                     } 
 
                     else if (xIndex == (width - 1)){
                         
                         usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.streetside];
-                        usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().rightStreetQuaternion;
+                        
+                        if (zDir != 0)
+                            usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().rightStreetQuaternion;
+                        else if (xDir != 0)
+                            usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().rightStreetQuaternionSideways;
                     }
 
                     else {
 
                         usedTile = thisClass.gameObject.GetComponent<Procedural_City_Generation>().cityElements[(int)cityElementsNames.street_dotted];
-                        usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().defaultStreetQuaternion;
+                        
+                        if (zDir != 0)
+                            usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().defaultStreetQuaternion;
+                        else if (xDir != 0)
+                            usedQuaternion = thisClass.gameObject.GetComponent<Procedural_City_Generation>().defaultStreetQuaternionSideways;
                     }
 
+                    
                     //INSTANTIATE
-                    streetArray[xIndex, zIndex] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos, zPos + (zIndex * tileSize)), usedQuaternion); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
+                    //streetArray[xIndex, zIndex] = tileDictionary[new Vector2 (xIndex, zIndex)] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos, zPos + (zIndex * tileSize)), usedQuaternion); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
+                    if (xDir != 0)
+                        streetArray[xIndex, zIndex] = tileDictionary[new Vector2 (xIndex, zIndex)] = Instantiate (usedTile, new Vector3 (xPos * tileSize, yPos, zPos + (xIndex * tileSize)), usedQuaternion); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
+                    else if (zDir != 0)
+                        streetArray[xIndex, zIndex] = tileDictionary[new Vector2 (xIndex, zIndex)] = Instantiate (usedTile, new Vector3 (xPos + (xIndex * tileSize), yPos, zPos * tileSize), usedQuaternion); //instantiate the 2d array with tile objects in the correct position (depending on its position in the 2d array and its size))
                 }
             }
-
-
         }
     }
-
 
     
     struct turnStreet {
@@ -260,13 +279,11 @@ public class Procedural_City_Generation : MonoBehaviour
     }
 
 
-    //for this point on the grid, is there a road tile
-    //find this out by iterating through an array of all of all of the streets and checking their positions
-    //
-    //PLS SOMEONE OPTIMIZE THIS UNLESS YOU GUYS WANT A DEDICATED LOADING SCREEN FOR THIS ALGORITHM
-    //
+    //for this point on the grid, is there a road tile (check the tile dictionary)
     public static bool streetExists (int xPos, int zPos) {
-        return false;
+        
+        //if the key actually exists (lul) and there is a gameObject there, then there will probably be a street there (at least for our purposes and algorithm)
+        return (tileDictionary.ContainsKey(new Vector2 (xPos, zPos)) && tileDictionary [new Vector2 (xPos, zPos)] != null);
     }
 
 
@@ -276,44 +293,86 @@ public class Procedural_City_Generation : MonoBehaviour
     //Use recursion (WAIT HOLD UP ur telling me that AP CS was ACTUALLY useful... im not buying it)
     //if you hit an already built road and it is a normal road, tranform it into a turn
     //if you hit an already built road and it is a turn, transform it into a 3 way intersection and so on
-    public static void generateStreet(){
-        
+    public static void generateStreets(Procedural_City_Generation thisClass) {
+
+        branchStreet (0, 0,   0, -1,   propogationLock,   0,   thisClass);
+        branchStreet (0, 1,   0, 1,   propogationLock,   0,   thisClass);
     }
+
+    //rotates the Quaternion that is in use so that the streets are facing the correct direction
+    public static void rotateStreetQuaternion(int xDir, int zDir, Procedural_City_Generation thisClass) {
+
+        thisClass.defaultStreetQuaternion = Quaternion.Euler(-90, (Math.Abs(xDir) * 90), 0);
+        thisClass.leftStreetQuaternion = Quaternion.Euler(-90, (Math.Abs(xDir) * 90), 180);
+        thisClass.rightStreetQuaternion = Quaternion.Euler(-90, (Math.Abs(xDir) * 90), 0);
+    } 
 
 
     //recursive method that is called whenever a new branch
-    //xDir and zDir can only be set to -1, 0, and 1 to denote how to propogate from its local starting point
-    public static void branchStreet(int xPos_, int zPos_, int xDir, int zDir, int lockPropogations) {
+    //xDir and zDir can only be set to -1, 0, and 1 to denote how to propogate from its local starting point might change this to a vector later
+    public static void branchStreet(int xPos_, int zPos_,   int xDir, int zDir,   int lockCountDown_,   int propogationCount_, Procedural_City_Generation thisClass) {
 
         bool isLocked = false;
-        int lockCountDown = lockPropogations; //is this necesary?
+        int lockCountDown = lockCountDown_; //is this necesary?
+        int propogationCount = propogationCount_;
 
         int xPos = xPos_;
         int zPos = zPos_;
 
 
+        //lock the intersection generation
+        if (lockCountDown <= 0) 
+            isLocked = false;
+        else
+            isLocked = true;
+        
+
         //end branch if you run into another road
         if (streetExists(xPos, zPos)) {
 
+            //Debug.Log("This Street Already Exists Stupid");
             //create a turn or whatever at that position 
-            //SOMETHING SOMETHING CODE
+            //SOMETHING SOMETHING CODE TODO (Just make to make it look nice)
 
             //end this branch
             return;
         }
 
+        //make sure the algorithm actually ends lmao
+        else if (propogationCount >= maxPropogation) {
+
+            //Debug.Log("Reached Max Propogation Count");
+            return;
+        }
+
+
+        //
+        //ACTUALLY DOING SOMETHING
+        //
+
         //create a four way intersection
         else if (random.Next(0, fourWayIntersectionGenerationProbability) == 0 && !isLocked) {
            
-            /*ranchStreet (xPos + xDir, zPos + zDir, );
-            branchStreet (xPos - xDir, zPos + zDir, );
-            branchStreet (xPos + xDir, zPos - zDir, );
-            branchStreet (xPos - xDir, zPos - zDir, );*/
+            //Debug.Log("Four Way Intersection Street Generation");
+
+            //make this line into a new 4 way intersection (3 x 3 square instead of a 3 x 1 rect)
+            new straightStreet (xPos, defaultYPos, zPos,   roadWidth, (uint) 1,   xDir, zDir,   tileSize,   thisClass);
+
+            branchStreet (xPos + 1/*(int)Math.Round(((double)roadWidth)/2)*/, zPos, 1, 0, lockCountDown, ++propogationCount, thisClass);
+            branchStreet (xPos - 1/*(int)Math.Round(((double)roadWidth)/2)*/, zPos, -1, 0, lockCountDown, ++propogationCount, thisClass);
+            branchStreet (xPos, zPos + 1/*(int)Math.Round(((double)roadWidth)/2)*/, 0, 1, lockCountDown, ++propogationCount, thisClass);
+            branchStreet (xPos, zPos - 1/*(int)Math.Round(((double)roadWidth)/2)*/, 0, -1, lockCountDown, ++propogationCount, thisClass);
         }
 
         //continue straight
         else {
 
+            //Debug.Log("Continuing Straight Street Generation");
+
+            //create the tile object at the correct position
+            new straightStreet (xPos, defaultYPos, zPos,   roadWidth, (uint) 1,   xDir, zDir,   tileSize,   thisClass);
+
+            branchStreet (xPos + xDir, zPos + zDir, xDir, zDir, --lockCountDown, ++propogationCount, thisClass);
         }
 
     }
@@ -333,10 +392,10 @@ public class Procedural_City_Generation : MonoBehaviour
 
 
     void Awake(){
-            
-            building build = new building(15f, 2f, 10f,   10, 10, 10,   2,   this);
-            building build1 = new building(-15f, 2f, 10f,   10, 10, 10,   2,   this);
-            straightStreet street1 = new straightStreet(0f, 2f, -10f,   3, 10,   2,   this);
+        
+        tileDictionary = new Dictionary<Vector2, GameObject>();
+
+        generateStreets (this);
     }
 
 

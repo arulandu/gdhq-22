@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3274755271613774938}
   - component: {fileID: 8621365251125414160}
   - component: {fileID: 6666370551669574998}
+  - component: {fileID: 4054333309763217237}
   m_Layer: 0
   m_Name: street_dotted
   m_TagString: Untagged
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4054333309763217237
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7501924981645236044}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.9999998, z: 0.024999997}
+  m_Center: {x: 0, y: 0, z: 0.012499998}
