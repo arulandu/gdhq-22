@@ -305,7 +305,7 @@ MonoBehaviour:
   antiRoll: 5000
   maxMotorTorque: 300
   maxSteeringAngle: 30
-  cOM: {fileID: 0}
+  cOM: {fileID: 6302749035324380772}
 --- !u!1001 &1947721073816558744
 PrefabInstance:
   m_ObjectHideFlags: 0
