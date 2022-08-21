@@ -17,10 +17,10 @@ class DecalMeshHelperEditor : Editor {
     {
         DrawDefaultInspector();
         var wfc = (WFC)target;
-        if (GUILayout.Button("Generate"))
+        if (GUILayout.Button("GenerateTest"))
         {
             Debug.Log("Generating");
-            wfc.Generate();
+            wfc.GenerateTest();
         }
     }
 }
@@ -28,25 +28,25 @@ public class WFC : MonoBehaviour
 {
     public RawImage image;
     public Texture2D pattern;
-    public int N = 3, width = 48, height = 48, symmetry = 8;
-    public bool periodic = false, periodicInput = true, ground = false;
-    public int limit = (int) 1e9;
-    public int seed = 1;
-    public void Generate()
+    public void GenerateTest()
     {
         image.texture = pattern;
-        var model = new OverlappingModel(pattern, N, width, height, periodicInput, periodic, symmetry, ground,
+        image.texture = Generate(pattern, 3, 48, 48, false, true, false, 8, (int)1e9, 1);
+    }
+
+    public static Texture2D Generate(Texture2D pattern, int n, int width, int height, bool periodic, bool periodicInput,
+         bool ground, int symmetry, int limit, int seed)
+    {
+        var model = new OverlappingModel(pattern, n, width, height, periodicInput, periodic, symmetry, ground,
             Model.Heuristic.Entropy);
         model.Run(seed, limit);
         var outputPattern = model.Save();
         var outTex = intArrayToTexture(outputPattern, width, height);
-        image.texture = outTex;
+        return outTex;
     }
 
     public static int[] textureToIntArray(Texture2D texture)
     {
-        Debug.Log(texture.width + " " + texture.height + " " + texture.format);
-    
         var x = texture.GetRawTextureData<int>();
         var ar = new int[x.Length];
         for (int i = 0; i < x.Length; i++) ar[i] = x[i];
