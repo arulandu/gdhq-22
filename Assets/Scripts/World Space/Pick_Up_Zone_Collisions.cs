@@ -6,7 +6,7 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
 {
     bool alreadyVisited;
     public uint numChildrenAtPickUp; //number of children at this pick up zone
-    public Collider busCollider; //initialize this in the editor to whatever collider the bus is using
+    static GameObject busObject; //initialize this in the editor to whatever collider the bus is using
 
     void Awake(){
 
@@ -19,11 +19,15 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
     void OnTriggerEnter(Collider collider){
 
 
-        if (collider == busCollider && alreadyVisited == false){
+        if (collider == busObject.GetComponent<BoxCollider>() && alreadyVisited == false){
 
             alreadyVisited = true;
-            CarController.pickUp(numChildrenAtPickUp);
+            BusController.pickUp(numChildrenAtPickUp);
         }
         
+    }
+
+    public static void setBus(GameObject busObject_) {
+        busObject = busObject_;
     }
 }

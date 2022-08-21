@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Drop_Zone
+  - Bus
   layers:
   - Default
   - TransparentFX

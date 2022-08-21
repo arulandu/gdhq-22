@@ -30,16 +30,18 @@ public class ProceduralCityGeneration : MonoBehaviour {
     public float houseRightOffsetZ;
 
     public int houseCount = 0;
-    public int pickUpZoneProbability {get;} = 10;
     public bool isSchool = false;
+
     static System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
+    public int pickUpZoneProbability {get;} = 10;
+    public int carSpawnProbability {get;} = 20;
 
     static Dictionary <Vector2, GameObject> tileDictionary;
     static Texture cityTexture; //proc gen texture to build the city off of 
-    static int [ , ] cityMap; // thing that store the location of every street and everything so that we can make a map of it later
+    public static int [ , ] cityMap; // thing that store the location of every street and everything so that we can make a map of it later
     static Dictionary <Vector2, bool> isPickUpZone;
 
-    public GameObject[] cityElements = new GameObject[14]; //array of all of the cityElements (models) that can be set in the editor
+    public GameObject[] cityElements = new GameObject[15]; //array of all of the cityElements (models) that can be set in the editor
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -56,7 +58,8 @@ public class ProceduralCityGeneration : MonoBehaviour {
         streetIntersection = 10,
         grass = 11,
         pickUpZone = 12,
-        dropOffZone = 13
+        dropOffZone = 13,
+        car = 14
     } 
 
     //a building represents a 3 dimensional array of building objects each of which are cubical
@@ -147,6 +150,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
         generateGrass (thisClass);
         generateHouses (thisClass);
         generateSchool (thisClass);
+        generateCars (thisClass);
     }
 
     //generate a street at the specified point in space
@@ -288,6 +292,36 @@ public class ProceduralCityGeneration : MonoBehaviour {
         Instantiate (thisClass.cityElements [(int) cityElementsNames.grass], new Vector3 (5 * thisClass.tileSize, thisClass.defaultYPos, -0.675f * thisClass.tileSize), Quaternion.identity);
         Instantiate (thisClass.cityElements [(int) cityElementsNames.grass], new Vector3 (6 * thisClass.tileSize, thisClass.defaultYPos, -0.675f * thisClass.tileSize), Quaternion.identity);
     }
+
+
+    static void generateCars (ProceduralCityGeneration thisClass) {
+
+        for (int xIndex = 0; xIndex < thisClass.mapWidth; xIndex++) {
+            for (int zIndex = 0; zIndex < thisClass.mapHeight; zIndex++) {
+
+                if (random.Next(0, thisClass.carSpawnProbability) == 0) {
+                    generateCarAtStreet (xIndex, zIndex,   thisClass);
+                }
+            }
+        }
+    }
+
+    static void generateCarAtStreet (int xIndex, int zIndex,   ProceduralCityGeneration thisClass) {
+
+        if (cityMap [xIndex, zIndex] == (int)cityElementsNames.streetIntersection) {
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.car], new Vector3 (xIndex * thisClass.tileSize, thisClass.defaultYPos, zIndex * thisClass.tileSize), Quaternion.Euler (0, 0, 0));
+        }
+
+        else if (cityMap [xIndex, zIndex] == (int)cityElementsNames.streetX) {
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.car], new Vector3 (xIndex * thisClass.tileSize, thisClass.defaultYPos, zIndex * thisClass.tileSize), Quaternion.Euler (0, 90, 0));
+        }
+
+        else if (cityMap [xIndex, zIndex] == (int)cityElementsNames.streetZ) {
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.car], new Vector3 (xIndex * thisClass.tileSize, thisClass.defaultYPos, zIndex * thisClass.tileSize), Quaternion.Euler (0, 0, 0));
+        }
+    }
+
+
 
     void Awake(){
         WFCToStreet (this);

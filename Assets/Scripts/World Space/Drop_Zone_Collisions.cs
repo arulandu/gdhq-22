@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class Drop_Zone_Collisions : MonoBehaviour
 {
-    public Collider busCollider; //initialize this in the editor to whatever collider the bus is using
+    static GameObject busObject; //initialize this in the editor to the bus object
 
     //when one of the drop zones detects a collision, double check if it is colliding with the car and then call the Drop_Off function
     void OnTriggerEnter(Collider collider){
 
-        if (collider == busCollider)
-            CarController.dropOff();
+        if (collider == busObject.GetComponent<BoxCollider>())
+            BusController.dropOff();
                
+    }
+
+    public static void setBus(GameObject busObject_) {
+        busObject = busObject_;
     }
 }
