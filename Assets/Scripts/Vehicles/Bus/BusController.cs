@@ -39,7 +39,9 @@ public class BusController : MonoBehaviour {
     Vector3 direction;
     Vector3 prevPos;
     Vector3 velocity;
-    float drift;
+    float currentDrift;
+    float totalDrift;
+    public float driftResetThreshold; //if the drift is below this threshold then the driftTotal resets
     float prevVelocityMagnitude;
     //drifting stats
     public float miniBoostThreshold; //How high the drift -float- has to be before a miniBoost is initiated
@@ -110,7 +112,11 @@ public class BusController : MonoBehaviour {
         velocity = (transform.position - prevPos)/ Time.fixedDeltaTime;
         prevPos = transform.position;
 
-        drift = Vector3.Cross(direction, velocity).magnitude;
+        currentDrift = Vector3.Cross(direction, velocity).magnitude;
+        totalDrift += currentDrift;
+
+        if (currentDrift <= driftResetThreshold) //reset the total drift if it is too low
+            totalDrift = 0;
     }
 
 
@@ -118,6 +124,7 @@ public class BusController : MonoBehaviour {
     //Add a force to the car when boosting (keeping the addForceAtPosition stuff consistant with the fixedUpdate() stuff)
     public void miniBoost() {
         
+        Debug.Log(totalDrift);
         prevVelocityMagnitude = _rb.velocity.magnitude;
         foreach (AxleInfo axleInfo in axleInfos) {
 
@@ -130,6 +137,7 @@ public class BusController : MonoBehaviour {
 
     public void midBoost() {
         
+        Debug.Log(totalDrift);
         prevVelocityMagnitude = _rb.velocity.magnitude;
         foreach (AxleInfo axleInfo in axleInfos) {
             _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + midBoostSpeed), axleInfo.leftWheel.transform.position);
@@ -141,6 +149,7 @@ public class BusController : MonoBehaviour {
 
     public void turboBoost() {
 
+        Debug.Log(totalDrift);
         prevVelocityMagnitude = _rb.velocity.magnitude;
         foreach (AxleInfo axleInfo in axleInfos) {
             _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + turboBoostSpeed), axleInfo.leftWheel.transform.position);
@@ -196,13 +205,13 @@ public class BusController : MonoBehaviour {
         //Drifting stuff
         this.calculateDrift();
 
-        if (_dirInput.x == 0 && drift >= turboBoostThreshold)
+        if (_dirInput.x == 0 && totalDrift >= turboBoostThreshold)
             turboBoost();
 
-        else if (_dirInput.x == 0 && drift >= midBoostThreshold)
+        else if (_dirInput.x == 0 && totalDrift >= midBoostThreshold)
             midBoost();
 
-        else if (_dirInput.x == 0 && drift >= miniBoostThreshold)
+        else if (_dirInput.x == 0 && totalDrift >= miniBoostThreshold)
             miniBoost();
 
 

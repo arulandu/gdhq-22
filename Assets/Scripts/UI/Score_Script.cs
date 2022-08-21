@@ -46,8 +46,6 @@ public class Score_Script : MonoBehaviour
 
     void FixedUpdate(){
 
-        Debug.Log(CarController.totalNumChildrenDroppedOff);
-        
         //make sure that the player doesn't have negative points
         if ((scoreAdder + ((float)CarController.totalNumChildrenDroppedOff * childrenMultiplier) + ((float)Timer_Script.framesLeft * timeMultiplier)) <= 0)
             score = 0;
