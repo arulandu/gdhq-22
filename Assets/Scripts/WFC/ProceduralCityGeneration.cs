@@ -144,8 +144,9 @@ public class ProceduralCityGeneration : MonoBehaviour {
             }   
         }
 
-        generateGrass(thisClass);
-        generateHouses(thisClass);
+        generateGrass (thisClass);
+        generateHouses (thisClass);
+        generateSchool (thisClass);
     }
 
     //generate a street at the specified point in space
@@ -274,6 +275,18 @@ public class ProceduralCityGeneration : MonoBehaviour {
         }
         else
             isPickUpZone [new Vector2 (xIndex, zIndex)] = false;
+    }
+
+
+
+    static void generateSchool (ProceduralCityGeneration thisClass) {
+
+        Instantiate (thisClass.cityElements [(int) cityElementsNames.school], new Vector3 (4 * thisClass.tileSize, thisClass.defaultYPos, -1 * thisClass.tileSize), Quaternion.Euler (0, 90, 0));
+        Instantiate (thisClass.cityElements [(int) cityElementsNames.grass], new Vector3 (4 * thisClass.tileSize, thisClass.defaultYPos, -0.675f * thisClass.tileSize), Quaternion.identity);
+        Instantiate (thisClass.cityElements [(int) cityElementsNames.grass], new Vector3 (3 * thisClass.tileSize, thisClass.defaultYPos, -0.675f * thisClass.tileSize), Quaternion.identity);
+        Instantiate (thisClass.cityElements [(int) cityElementsNames.grass], new Vector3 (2 * thisClass.tileSize, thisClass.defaultYPos, -0.675f * thisClass.tileSize), Quaternion.identity);
+        Instantiate (thisClass.cityElements [(int) cityElementsNames.grass], new Vector3 (5 * thisClass.tileSize, thisClass.defaultYPos, -0.675f * thisClass.tileSize), Quaternion.identity);
+        Instantiate (thisClass.cityElements [(int) cityElementsNames.grass], new Vector3 (6 * thisClass.tileSize, thisClass.defaultYPos, -0.675f * thisClass.tileSize), Quaternion.identity);
     }
 
     void Awake(){
