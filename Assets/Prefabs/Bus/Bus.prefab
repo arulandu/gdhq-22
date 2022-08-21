@@ -306,6 +306,12 @@ MonoBehaviour:
   maxMotorTorque: 300
   maxSteeringAngle: 20
   cOM: {fileID: 6302749035324380772}
+  miniBoostThreshold: 1
+  miniBoostSpeed: 100
+  midBoostThreshold: 2
+  midBoostSpeed: 200
+  turboBoostThreshold: 4
+  turboBoostSpeed: 400
 --- !u!1001 &1947721073816558744
 PrefabInstance:
   m_ObjectHideFlags: 0

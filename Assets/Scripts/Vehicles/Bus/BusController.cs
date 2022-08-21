@@ -28,9 +28,27 @@ public class BusController : MonoBehaviour {
 
     private Rigidbody _rb;
 
+    //these will be static for right now 
+    //if we would ever consider multiplayer (which we won't for the purposes of this game jam) we would have to rewrite a lot of the child drop off and pick up code
     public static uint numChildren;
     public static uint totalNumChildrenDroppedOff;
     public static bool isFlippedOver;
+
+
+    //drifting
+    Vector3 direction;
+    Vector3 prevPos;
+    Vector3 velocity;
+    float drift;
+    float prevVelocityMagnitude;
+    //drifting stats
+    public float miniBoostThreshold; //How high the drift -float- has to be before a miniBoost is initiated
+    public float miniBoostSpeed; //Speed you get from a mini boost
+    public float midBoostThreshold; //How high the drift -float- has to be before a midBoost is initiated
+    public float midBoostSpeed; //Speed you get from a mid boost
+    public float turboBoostThreshold; //How high the drift -float- has to be before a turboBoost is initiated
+    public float turboBoostSpeed; //Speed you get from a turbo boost
+
 
     [System.Serializable]
     public struct AxleInfo {
@@ -85,6 +103,54 @@ public class BusController : MonoBehaviour {
     }
 
 
+
+    public void calculateDrift() {
+
+        direction = transform.forward;
+        velocity = (transform.position - prevPos)/ Time.fixedDeltaTime;
+        prevPos = transform.position;
+
+        drift = Vector3.Cross(direction, velocity).magnitude;
+    }
+
+
+    //Boosts
+    //Add a force to the car when boosting (keeping the addForceAtPosition stuff consistant with the fixedUpdate() stuff)
+    public void miniBoost() {
+        
+        prevVelocityMagnitude = _rb.velocity.magnitude;
+        foreach (AxleInfo axleInfo in axleInfos) {
+
+            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + miniBoostSpeed), axleInfo.leftWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + miniBoostSpeed), axleInfo.rightWheel.transform.position);
+        }
+
+        Debug.Log("isMiniBoosting");
+    }
+
+    public void midBoost() {
+        
+        prevVelocityMagnitude = _rb.velocity.magnitude;
+        foreach (AxleInfo axleInfo in axleInfos) {
+            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + midBoostSpeed), axleInfo.leftWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + midBoostSpeed), axleInfo.rightWheel.transform.position);
+        }
+
+        Debug.Log("isMidBoosting");
+    }
+
+    public void turboBoost() {
+
+        prevVelocityMagnitude = _rb.velocity.magnitude;
+        foreach (AxleInfo axleInfo in axleInfos) {
+            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + turboBoostSpeed), axleInfo.leftWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + turboBoostSpeed), axleInfo.rightWheel.transform.position);
+        }
+
+        Debug.Log("isTurboBoosting");
+    }
+
+
     public void FixedUpdate()
     {
         float motor = maxMotorTorque * _dirInput.y;
@@ -125,5 +191,21 @@ public class BusController : MonoBehaviour {
                 isFlippedOver = true;
                 Explode();
         }
+
+
+        //Drifting stuff
+        this.calculateDrift();
+
+        if (_dirInput.x == 0 && drift >= turboBoostThreshold)
+            turboBoost();
+
+        else if (_dirInput.x == 0 && drift >= midBoostThreshold)
+            midBoost();
+
+        else if (_dirInput.x == 0 && drift >= miniBoostThreshold)
+            miniBoost();
+
+
+        //Debug.Log(drift);
     }
 }
