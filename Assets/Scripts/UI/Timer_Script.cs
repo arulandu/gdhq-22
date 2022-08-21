@@ -52,7 +52,7 @@ public class Timer_Script : MonoBehaviour
         if (timeFormat.minutes <= dangerModeMinutes && timeFormat.seconds <= dangerModeSeconds)
             enableDangerMode();
 
-        timerText.text = timeFormat.toString();
+        timerText.text = "Time Left: " + timeFormat.toString();
     }
 
     //makes the text become red and might make some sound thing play whenever the timer is below a certain threshold
