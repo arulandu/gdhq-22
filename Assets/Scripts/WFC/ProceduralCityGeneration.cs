@@ -16,6 +16,10 @@ public class ProceduralCityGeneration : MonoBehaviour {
 
     public float streetXOffsetX;
     public float streetXOffsetZ;
+    public float streetZOffsetX;
+    public float streetZOffsetZ;
+    public float grassOffsetX;
+    public float grassOffsetZ;
 
     static Dictionary <Vector2, GameObject> tileDictionary; //an map representing the positions of everything along the x and z axes
 
@@ -25,7 +29,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
     static GameObject[ , ] cityMap; // thing that store the location of every street and everything so that we can make a map of it later
 
 
-    public GameObject[] cityElements = new GameObject[7]; //array of all of the cityElements (models) that can be set in the editor
+    public GameObject[] cityElements = new GameObject[8]; //array of all of the cityElements (models) that can be set in the editor
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -36,7 +40,8 @@ public class ProceduralCityGeneration : MonoBehaviour {
         school = 3,
         streetX = 4,
         streetZ = 5,
-        streetIntersection = 6
+        streetIntersection = 6,
+        grass = 7
     } 
 
     //a building represents a 3 dimensional array of building objects each of which are cubical
@@ -121,19 +126,21 @@ public class ProceduralCityGeneration : MonoBehaviour {
 
             }   
         }
+
+        generateGrass(thisClass);
     }
 
     //generate a street at the specified point in space
     static void generateStreet (int xIndex, int zIndex,   Texture2D WFCTexture,   ProceduralCityGeneration thisClass) {
 
         if (IsVerticalStreet(xIndex, zIndex,   WFCTexture,   thisClass) && IsHorizontalStreet(xIndex, zIndex,   WFCTexture,   thisClass))  // (if its a part of an intersection)
-            Instantiate (thisClass.cityElements[(int)cityElementsNames.streetIntersection],   new Vector3 ((xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = Instantiate (thisClass.cityElements[(int)cityElementsNames.streetIntersection],   new Vector3 ((xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
         
         else if (IsVerticalStreet(xIndex, zIndex,   WFCTexture,   thisClass)) // (if its a street thats going in the z dir)
-            Instantiate (thisClass.cityElements[(int)cityElementsNames.streetZ] ,   new Vector3 ((xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = Instantiate (thisClass.cityElements[(int)cityElementsNames.streetZ] ,   new Vector3 (thisClass.streetZOffsetX + (xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, thisClass.streetZOffsetZ + (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
 
         else if (IsHorizontalStreet(xIndex, zIndex,   WFCTexture,   thisClass)) // (if its a street thats going in the x dir)
-            Instantiate (thisClass.cityElements[(int)cityElementsNames.streetX],   new Vector3 (thisClass.streetXOffsetX + (xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, thisClass.streetXOffsetZ + (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = Instantiate (thisClass.cityElements[(int)cityElementsNames.streetX],   new Vector3 (thisClass.streetXOffsetX + (xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, thisClass.streetXOffsetZ + (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
     } 
 
 
@@ -153,6 +160,16 @@ public class ProceduralCityGeneration : MonoBehaviour {
         return false;
     }
 
+    static void generateGrass (ProceduralCityGeneration thisClass) {
+
+        for (int xIndex = 0; xIndex < thisClass.mapWidth; xIndex++) {
+            for (int zIndex = 0; zIndex < thisClass.mapHeight; zIndex++) {
+                
+                if (cityMap [xIndex, zIndex] == null)
+                    cityMap [xIndex, zIndex] = Instantiate (thisClass.cityElements[(int)cityElementsNames.grass], new Vector3 (thisClass.grassOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.grassOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            }
+        }
+    }
 
 
     void Awake(){
