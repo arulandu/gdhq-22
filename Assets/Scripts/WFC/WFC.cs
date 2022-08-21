@@ -50,7 +50,6 @@ public class WFC : MonoBehaviour
         var x = texture.GetRawTextureData<int>();
         var ar = new int[x.Length];
         for (int i = 0; i < x.Length; i++) ar[i] = x[i];
-        // foreach(var y in ar) Debug.Log(Convert.ToString(y, 2));
         return ar;
     }
 
@@ -59,8 +58,6 @@ public class WFC : MonoBehaviour
         byte[] bytes = new byte[ints.Length * sizeof(int)];
         Buffer.BlockCopy(ints, 0, bytes, 0, bytes.Length);
         
-        Debug.Log(ints.Length + " " + bytes.Length + " " + width + " " + height);
-        foreach(var b in bytes) Debug.Log(Convert.ToString(b, 2));
         var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
         texture.LoadRawTextureData(bytes);
         texture.Apply();
