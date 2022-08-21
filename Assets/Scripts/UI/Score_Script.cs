@@ -27,7 +27,6 @@ public class Score_Script : MonoBehaviour
     public float timeMultiplier; //set in the editor and SHOULD be tweeked
     public float childrenMultiplier; //set in the editor and SHOULD be tweeked
     public float initialScore; //set in the editor and SHOULD be tweeked
-    public bool isInvisible = true; //can be tweaked in the editor
 
     private float scoreAdder; //score that you would need to add to start with the initial score that is desired
 
@@ -42,9 +41,6 @@ public class Score_Script : MonoBehaviour
         score = (uint)initialScore;
 
         scoreEffects = new Score_Effects(scoreText);
-
-        if (isInvisible)
-            this.gameObject.GetComponent<TextMeshProUGUI>().color = new Color (0, 0, 0, 0); //make the text transparent 
     }
     
 

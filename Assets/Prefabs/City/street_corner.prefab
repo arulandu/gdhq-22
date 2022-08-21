@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6228923159947335915}
   - component: {fileID: 4948436850452327428}
   - component: {fileID: 5150117461114412241}
+  - component: {fileID: 5899058700701955548}
   m_Layer: 0
   m_Name: street_corner
   m_TagString: Untagged
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5899058700701955548
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6145220444390966009}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.9999998, z: 0.024999997}
+  m_Center: {x: 0, y: 0, z: 0.012499998}

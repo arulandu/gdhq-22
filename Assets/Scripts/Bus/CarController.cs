@@ -15,13 +15,13 @@ public class AxleInfo {
 
 
 public class CarController : MonoBehaviour {
-    public Transform coM;
+
     public List<AxleInfo> axleInfos;
     public float antiRoll = 5000.0f;
     public float maxMotorTorque;
     public float maxSteeringAngle;
-
-    public Vector2 dirInput;
+    public Transform cOM;
+    private Vector2 _dirInput;
 
     private Rigidbody _rb;
 
@@ -43,20 +43,20 @@ public class CarController : MonoBehaviour {
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _rb.centerOfMass = transform.InverseTransformPoint(coM.position);
+        _rb.centerOfMass = transform.InverseTransformPoint(cOM.position);
     }
 
     private void Update()
     {
-        dirInput.x = Input.GetAxis("Horizontal");
-        dirInput.y = Input.GetAxis("Vertical");
+        _dirInput.y = Input.GetAxis("Vertical");
+        _dirInput.x = Input.GetAxis("Horizontal");
     }
 
     private void OnDrawGizmos()
     {
         _rb = GetComponent<Rigidbody>();
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position + transform.rotation*_rb.centerOfMass, 0.1f);
+        Gizmos.DrawSphere(transform.position + transform.rotation*_rb.centerOfMass, 1f);
     }
 
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
@@ -77,8 +77,8 @@ public class CarController : MonoBehaviour {
      
     public void FixedUpdate()
     {
-        float motor = maxMotorTorque * dirInput.y;
-        float steering = maxSteeringAngle * dirInput.x;
+        float motor = maxMotorTorque * _dirInput.y;
+        float steering = maxSteeringAngle * _dirInput.x;
      
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {

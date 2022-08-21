@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Input_Manager : MonoBehaviour
 {
-    // Commenting this out to add gradual turning. If we want to use new input system, we'll do this later. best to stick away from statics
-    
+    // commented out for smoother turning
     // public PlayerInput playerInput;
     //
     // public static InputAction verticalInput;
