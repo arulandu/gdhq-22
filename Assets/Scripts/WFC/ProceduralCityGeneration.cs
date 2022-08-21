@@ -213,7 +213,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
              cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetX || 
              cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the right
             
-            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseRight], new Vector3 (thisClass.houseRightOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseRightOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseRight], new Vector3 (thisClass.houseRightOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseRightOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 180, 0));
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseRight;
         }
 
@@ -222,7 +222,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
             cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetX || 
             cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the left
 
-            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseLeft], new Vector3 (thisClass.houseLeftOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseLeftOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseLeft], new Vector3 (thisClass.houseLeftOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseLeftOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 0, 0));
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseLeft;
         }
 
@@ -231,7 +231,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
             cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetX || 
             cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetZ)) { //street above
 
-            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseUp], new Vector3 (thisClass.houseUpOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseUpOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseUp], new Vector3 (thisClass.houseUpOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseUpOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 90, 0));
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseUp;
         }
 
@@ -240,7 +240,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
             cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetX || 
             cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetZ)) {//street below
 
-            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseDown], new Vector3 (thisClass.houseDownOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseDownOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseDown], new Vector3 (thisClass.houseDownOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseDownOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 270, 0));
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseDown;
         }
     }
