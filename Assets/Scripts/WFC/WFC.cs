@@ -28,6 +28,7 @@ public class WFC : MonoBehaviour
 {
     public RawImage image;
     public Texture2D pattern;
+
     public void GenerateTest()
     {
         image.texture = pattern;
