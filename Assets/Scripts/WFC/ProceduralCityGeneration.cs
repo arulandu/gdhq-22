@@ -29,16 +29,17 @@ public class ProceduralCityGeneration : MonoBehaviour {
     public float houseRightOffsetX;
     public float houseRightOffsetZ;
 
-    public int houseCount;
+    public int houseCount = 0;
+    public int pickUpZoneProbability {get;} = 10;
     public bool isSchool = false;
     static System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
 
     static Dictionary <Vector2, GameObject> tileDictionary;
     static Texture cityTexture; //proc gen texture to build the city off of 
     static int [ , ] cityMap; // thing that store the location of every street and everything so that we can make a map of it later
+    static Dictionary <Vector2, bool> isPickUpZone;
 
-
-    public GameObject[] cityElements = new GameObject[12]; //array of all of the cityElements (models) that can be set in the editor
+    public GameObject[] cityElements = new GameObject[14]; //array of all of the cityElements (models) that can be set in the editor
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
@@ -53,7 +54,9 @@ public class ProceduralCityGeneration : MonoBehaviour {
         streetX = 8,
         streetZ = 9,
         streetIntersection = 10,
-        grass = 11
+        grass = 11,
+        pickUpZone = 12,
+        dropOffZone = 13
     } 
 
     //a building represents a 3 dimensional array of building objects each of which are cubical
@@ -121,6 +124,8 @@ public class ProceduralCityGeneration : MonoBehaviour {
         int height = thisClass.mapHeight;
 
         cityMap = new int[height, width];
+
+        isPickUpZone = new Dictionary<Vector2, bool>();
 
         Texture2D WFCTexture = WFC.Generate(thisClass.pattern, 3, width, height, false, true, false, 8, (int)1e9, 1);
 
@@ -200,13 +205,13 @@ public class ProceduralCityGeneration : MonoBehaviour {
             for (int zIndex = 0; zIndex < thisClass.mapHeight; zIndex++) {
 
                 if (cityMap [xIndex, zIndex] == (int)cityElementsNames.grass) {
-                    generateIfNearStreet (xIndex, zIndex,   cityMap,   thisClass);
+                    generateHouseIfNearStreet (xIndex, zIndex,   cityMap,   thisClass);
                 }
             }
         }
     }
 
-    static void generateIfNearStreet (int xIndex, int zIndex,   int[ , ] cityMap,   ProceduralCityGeneration thisClass) {
+    static void generateHouseIfNearStreet (int xIndex, int zIndex,   int[ , ] cityMap,   ProceduralCityGeneration thisClass) {
 
         if (indexExists (xIndex + 1, zIndex, cityMap) &&
             (cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetIntersection || 
@@ -214,7 +219,10 @@ public class ProceduralCityGeneration : MonoBehaviour {
              cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the right
             
             Instantiate (thisClass.cityElements[(int)cityElementsNames.houseRight], new Vector3 (thisClass.houseRightOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseRightOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 180, 0));
+            generatePickUpZone (xIndex, zIndex,   cityMap,   thisClass);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseRight;
+            thisClass.houseCount++;
+            
         }
 
         else if (indexExists (xIndex - 1, zIndex, cityMap) &&
@@ -223,7 +231,9 @@ public class ProceduralCityGeneration : MonoBehaviour {
             cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the left
 
             Instantiate (thisClass.cityElements[(int)cityElementsNames.houseLeft], new Vector3 (thisClass.houseLeftOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseLeftOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 0, 0));
+            generatePickUpZone (xIndex, zIndex,   cityMap,   thisClass);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseLeft;
+            thisClass.houseCount++;
         }
 
         else if (indexExists (xIndex, zIndex + 1, cityMap) &&
@@ -232,7 +242,9 @@ public class ProceduralCityGeneration : MonoBehaviour {
             cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetZ)) { //street above
 
             Instantiate (thisClass.cityElements[(int)cityElementsNames.houseUp], new Vector3 (thisClass.houseUpOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseUpOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 90, 0));
+            generatePickUpZone (xIndex, zIndex,   cityMap,   thisClass);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseUp;
+            thisClass.houseCount++;
         }
 
         else if (indexExists (xIndex, zIndex - 1, cityMap) &&
@@ -241,7 +253,9 @@ public class ProceduralCityGeneration : MonoBehaviour {
             cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetZ)) {//street below
 
             Instantiate (thisClass.cityElements[(int)cityElementsNames.houseDown], new Vector3 (thisClass.houseDownOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseDownOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.Euler (0, 270, 0));
+            generatePickUpZone (xIndex, zIndex,   cityMap,   thisClass);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseDown;
+            thisClass.houseCount++;
         }
     }
 
@@ -250,6 +264,16 @@ public class ProceduralCityGeneration : MonoBehaviour {
         if (xIndex >= 0 && zIndex >= 0 && xIndex < matrix.GetLength(1) && zIndex < matrix.GetLength(0))
             return true;
         return false;
+    }
+
+    static void generatePickUpZone (int xIndex, int zIndex,   int [ , ] cityMap,   ProceduralCityGeneration thisClass) {
+
+        if (random.Next(0, thisClass.pickUpZoneProbability) == 0) {
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.pickUpZone], new Vector3 (xIndex * thisClass.tileSize, thisClass.defaultYPos, zIndex * thisClass.tileSize), Quaternion.identity);
+            isPickUpZone [new Vector2 (xIndex, zIndex)] = true;
+        }
+        else
+            isPickUpZone [new Vector2 (xIndex, zIndex)] = false;
     }
 
     void Awake(){
