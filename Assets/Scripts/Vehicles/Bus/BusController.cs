@@ -3,32 +3,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class BusAxleInfo {
-
-    public WheelCollider leftWheel;
-    public WheelCollider rightWheel;
-    public bool motor;
-    public bool steering;
-}
-     
-
 
 public class BusController : MonoBehaviour {
-
-    public List<BusAxleInfo> axleInfos;
-    public float antiRoll = 5000.0f;
-    public float maxMotorTorque;
-    public float maxSteeringAngle;
-    public Transform cOM;
-    private Vector2 _dirInput;
-
-    private Rigidbody _rb;
-
-    public static uint numChildren;
-    public static uint totalNumChildrenDroppedOff;
-    public static bool isFlippedOver;
-
 
     public static void pickUp(uint numChildrenPickingUp){
 
@@ -41,10 +17,30 @@ public class BusController : MonoBehaviour {
         totalNumChildrenDroppedOff += numChildren;
         numChildren = 0;
     }
+
+
+    public List<AxleInfo> axleInfos;
+    public float antiRoll = 5000.0f;
+    public float maxMotorTorque;
+    public float maxSteeringAngle;
+    public Transform cOM;
+    private Vector2 _dirInput;
+
+    private Rigidbody _rb;
+
+    public static uint numChildren;
+    public static uint totalNumChildrenDroppedOff;
+    public static bool isFlippedOver;
+
+    [System.Serializable]
+    public struct AxleInfo {
+
+        public WheelCollider leftWheel;
+        public WheelCollider rightWheel;
+        public bool motor;
+        public bool steering;
+    }
     
-
-
-
 
     private void Start()
     {
@@ -94,7 +90,7 @@ public class BusController : MonoBehaviour {
         float motor = maxMotorTorque * _dirInput.y;
         float steering = maxSteeringAngle * _dirInput.x;
      
-        foreach (BusAxleInfo axleInfo in axleInfos) {
+        foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
                 axleInfo.leftWheel.steerAngle = steering;
                 axleInfo.rightWheel.steerAngle = steering;
