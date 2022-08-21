@@ -7,7 +7,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
 
     //stats (cannot be tweaked in the editor must be tweaked in script)
     public float tileSize {get;} = 6; //the size of tiles in the gameWorld
-    public int defaultYPos {get;} = 3;
+    public int defaultYPos {get;} = 9;
     public int mapWidth; //width of the map lol
     public int mapHeight; //height of the map lol
     public Color streetColor; //color of the texture that the algorithm will read as a street 
@@ -20,28 +20,40 @@ public class ProceduralCityGeneration : MonoBehaviour {
     public float streetZOffsetZ;
     public float grassOffsetX;
     public float grassOffsetZ;
+    public float houseUpOffsetX;
+    public float houseUpOffsetZ;
+    public float houseDownOffsetX;
+    public float houseDownOffsetZ;
+    public float houseLeftOffsetX;
+    public float houseLeftOffsetZ;
+    public float houseRightOffsetX;
+    public float houseRightOffsetZ;
 
-    static Dictionary <Vector2, GameObject> tileDictionary; //an map representing the positions of everything along the x and z axes
-
+    public int houseCount;
+    public bool isSchool = false;
     static System.Random random = new System.Random(); //instantiate a random class (idk why c# does this either)
 
+    static Dictionary <Vector2, GameObject> tileDictionary;
     static Texture cityTexture; //proc gen texture to build the city off of 
-    static GameObject[ , ] cityMap; // thing that store the location of every street and everything so that we can make a map of it later
+    static int [ , ] cityMap; // thing that store the location of every street and everything so that we can make a map of it later
 
 
-    public GameObject[] cityElements = new GameObject[8]; //array of all of the cityElements (models) that can be set in the editor
+    public GameObject[] cityElements = new GameObject[12]; //array of all of the cityElements (models) that can be set in the editor
 
     //the only reason this exists is to act as a reference to which index the city elements are in
     public enum cityElementsNames { 
 
-        buildingBase = 0,
-        buildingWindow = 1,
-        house = 2,
-        school = 3,
-        streetX = 4,
-        streetZ = 5,
-        streetIntersection = 6,
-        grass = 7
+        buildingBase = 1,
+        buildingWindow = 2,
+        houseUp = 3,
+        houseDown = 4,
+        houseLeft = 5,
+        houseRight = 6,
+        school = 7,
+        streetX = 8,
+        streetZ = 9,
+        streetIntersection = 10,
+        grass = 11
     } 
 
     //a building represents a 3 dimensional array of building objects each of which are cubical
@@ -108,7 +120,7 @@ public class ProceduralCityGeneration : MonoBehaviour {
         int width = thisClass.mapWidth;
         int height = thisClass.mapHeight;
 
-        cityMap = new GameObject[height, width];
+        cityMap = new int[height, width];
 
         Texture2D WFCTexture = WFC.Generate(thisClass.pattern, 3, width, height, false, true, false, 8, (int)1e9, 1);
 
@@ -128,19 +140,26 @@ public class ProceduralCityGeneration : MonoBehaviour {
         }
 
         generateGrass(thisClass);
+        generateHouses(thisClass);
     }
 
     //generate a street at the specified point in space
     static void generateStreet (int xIndex, int zIndex,   Texture2D WFCTexture,   ProceduralCityGeneration thisClass) {
 
-        if (IsVerticalStreet(xIndex, zIndex,   WFCTexture,   thisClass) && IsHorizontalStreet(xIndex, zIndex,   WFCTexture,   thisClass))  // (if its a part of an intersection)
-            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = Instantiate (thisClass.cityElements[(int)cityElementsNames.streetIntersection],   new Vector3 ((xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
-        
-        else if (IsVerticalStreet(xIndex, zIndex,   WFCTexture,   thisClass)) // (if its a street thats going in the z dir)
-            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = Instantiate (thisClass.cityElements[(int)cityElementsNames.streetZ] ,   new Vector3 (thisClass.streetZOffsetX + (xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, thisClass.streetZOffsetZ + (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+        if (IsVerticalStreet(xIndex, zIndex,   WFCTexture,   thisClass) && IsHorizontalStreet(xIndex, zIndex,   WFCTexture,   thisClass)) {  // (if its a part of an intersection)
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.streetIntersection],   new Vector3 ((xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = (int)cityElementsNames.streetIntersection;
+        }
 
-        else if (IsHorizontalStreet(xIndex, zIndex,   WFCTexture,   thisClass)) // (if its a street thats going in the x dir)
-            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = Instantiate (thisClass.cityElements[(int)cityElementsNames.streetX],   new Vector3 (thisClass.streetXOffsetX + (xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, thisClass.streetXOffsetZ + (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+        else if (IsVerticalStreet(xIndex, zIndex,   WFCTexture,   thisClass)) { // (if its a street thats going in the z dir)
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.streetZ] ,   new Vector3 (thisClass.streetZOffsetX + (xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, thisClass.streetZOffsetZ + (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = (int)cityElementsNames.streetZ;
+        }
+
+        else if (IsHorizontalStreet(xIndex, zIndex,   WFCTexture,   thisClass)) { // (if its a street thats going in the x dir)
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.streetX],   new Vector3 (thisClass.streetXOffsetX + (xIndex * thisClass.tileSize) / thisClass.textureResolution, thisClass.defaultYPos, thisClass.streetXOffsetZ + (zIndex * thisClass.tileSize) / thisClass.textureResolution),   Quaternion.identity);
+            cityMap [xIndex / thisClass.textureResolution, zIndex / thisClass.textureResolution] = (int)cityElementsNames.streetX; 
+        }
     } 
 
 
@@ -165,15 +184,75 @@ public class ProceduralCityGeneration : MonoBehaviour {
         for (int xIndex = 0; xIndex < thisClass.mapWidth; xIndex++) {
             for (int zIndex = 0; zIndex < thisClass.mapHeight; zIndex++) {
                 
-                if (cityMap [xIndex, zIndex] == null)
-                    cityMap [xIndex, zIndex] = Instantiate (thisClass.cityElements[(int)cityElementsNames.grass], new Vector3 (thisClass.grassOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.grassOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+                if (cityMap [xIndex, zIndex] == 0) {
+                    Instantiate (thisClass.cityElements[(int)cityElementsNames.grass], new Vector3 (thisClass.grassOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.grassOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+                    cityMap [xIndex, zIndex] = (int)cityElementsNames.grass;
+                }
+                    
             }
         }
     }
 
 
-    void Awake(){
+    static void generateHouses (ProceduralCityGeneration thisClass) {
 
+        for (int xIndex = 0; xIndex < thisClass.mapWidth; xIndex++) {
+            for (int zIndex = 0; zIndex < thisClass.mapHeight; zIndex++) {
+
+                if (cityMap [xIndex, zIndex] == (int)cityElementsNames.grass) {
+                    generateIfNearStreet (xIndex, zIndex,   cityMap,   thisClass);
+                }
+            }
+        }
+    }
+
+    static void generateIfNearStreet (int xIndex, int zIndex,   int[ , ] cityMap,   ProceduralCityGeneration thisClass) {
+
+        if (indexExists (xIndex + 1, zIndex, cityMap) &&
+            (cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetIntersection || 
+             cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetX || 
+             cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the right
+            
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseRight], new Vector3 (thisClass.houseRightOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseRightOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseRight;
+        }
+
+        else if (indexExists (xIndex - 1, zIndex, cityMap) &&
+            (cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetIntersection || 
+            cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetX || 
+            cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the left
+
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseLeft], new Vector3 (thisClass.houseLeftOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseLeftOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseLeft;
+        }
+
+        else if (indexExists (xIndex, zIndex + 1, cityMap) &&
+            (cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetIntersection || 
+            cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetX || 
+            cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetZ)) { //street above
+
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseUp], new Vector3 (thisClass.houseUpOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseUpOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseUp;
+        }
+
+        else if (indexExists (xIndex, zIndex - 1, cityMap) &&
+            (cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetIntersection || 
+            cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetX || 
+            cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetZ)) {//street below
+
+            Instantiate (thisClass.cityElements[(int)cityElementsNames.houseDown], new Vector3 (thisClass.houseDownOffsetX + (xIndex * thisClass.tileSize), thisClass.defaultYPos, thisClass.houseDownOffsetZ + (zIndex * thisClass.tileSize)), Quaternion.identity);
+            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseDown;
+        }
+    }
+
+    static bool indexExists (int xIndex, int zIndex, int [ , ] matrix) {
+
+        if (xIndex >= 0 && zIndex >= 0 && xIndex < matrix.GetLength(1) && zIndex < matrix.GetLength(0))
+            return true;
+        return false;
+    }
+
+    void Awake(){
         WFCToStreet (this);
     }
 
