@@ -27,6 +27,7 @@ public class BusController : MonoBehaviour {
 
     public static uint numChildren;
     public static uint totalNumChildrenDroppedOff;
+    public static bool isFlippedOver;
 
 
     public static void pickUp(uint numChildrenPickingUp){
@@ -41,6 +42,9 @@ public class BusController : MonoBehaviour {
         numChildren = 0;
     }
     
+
+
+
 
     private void Start()
     {
@@ -79,7 +83,12 @@ public class BusController : MonoBehaviour {
         visualWheel.transform.position = position;
         visualWheel.transform.rotation = rotation;
     }
-     
+    
+    public static void Explode() {
+
+    }
+
+
     public void FixedUpdate()
     {
         float motor = maxMotorTorque * _dirInput.y;
@@ -110,6 +119,15 @@ public class BusController : MonoBehaviour {
             // update wheel graphics
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
+        }
+
+
+        //just a small check to see if the vehicle is flipped over
+        if ((Math.Abs(transform.eulerAngles.x) >= 90 && Math.Abs(transform.eulerAngles.x) <= 270) ||
+            (Math.Abs(transform.eulerAngles.z) >= 90 && Math.Abs(transform.eulerAngles.z) <= 270)) {
+
+                isFlippedOver = true;
+                Explode();
         }
     }
 }
