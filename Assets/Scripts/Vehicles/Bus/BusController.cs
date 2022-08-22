@@ -32,6 +32,7 @@ public class BusController : MonoBehaviour
     public float turboBoostSpeed; //Speed you get from a turbo boost
 
 
+
     private void Start()
     {
         isFlippedOver = false;
@@ -62,7 +63,7 @@ public class BusController : MonoBehaviour
         velocity = (transform.position - prevPos) / Time.fixedDeltaTime;
         prevPos = transform.position;
 
-        currentDrift = Vector3.Cross(direction, velocity).magnitude;
+        currentDrift = Vector3.Cross(direction, velocity.normalized).magnitude;
         totalDrift += currentDrift;
 
         if (currentDrift <= driftResetThreshold) //reset the total drift if it is too low
