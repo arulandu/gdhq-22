@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 4820347857609793685}
   - component: {fileID: -5702757755584920338}
   - component: {fileID: 8455535611254358361}
+  - component: {fileID: 4789957524190756986}
   m_Layer: 0
   m_Name: Bus
   m_TagString: Bus
@@ -293,19 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df93ebd3d01f3ee40aebb3b7522ee081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axleInfos:
-  - leftWheel: {fileID: 2424600626717914630}
-    rightWheel: {fileID: 2060292701729406392}
-    motor: 1
-    steering: 1
-  - leftWheel: {fileID: 1383109435474276406}
-    rightWheel: {fileID: 8093890912139213791}
-    motor: 1
-    steering: 0
-  antiRoll: 5000
-  maxMotorTorque: 300
-  maxSteeringAngle: 20
-  cOM: {fileID: 6302749035324380772}
+  isFlippedOver: 0
   driftResetThreshold: 1
   miniBoostThreshold: 100
   miniBoostSpeed: 100
@@ -313,6 +302,31 @@ MonoBehaviour:
   midBoostSpeed: 200
   turboBoostThreshold: 1000
   turboBoostSpeed: 400
+--- !u!114 &4789957524190756986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798940840894239644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73286c2d53b3d446815bbb7d872608a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axleInfos:
+  - leftWheel: {fileID: 2424600626717914630}
+    rightWheel: {fileID: 2060292701729406392}
+    motor: 1
+    steering: 1
+  - leftWheel: {fileID: 1383109435474276406}
+    rightWheel: {fileID: 8093890912139213791}
+    motor: 0
+    steering: 0
+  antiRoll: 5000
+  maxMotorTorque: 300
+  maxSteeringAngle: 15
+  cOM: {fileID: 6302749035324380772}
 --- !u!1001 &1947721073816558744
 PrefabInstance:
   m_ObjectHideFlags: 0

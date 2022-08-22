@@ -4,36 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class BusController : MonoBehaviour {
+public class BusController : MonoBehaviour
+{
+    public bool isFlippedOver = false;
 
-    public static void pickUp(uint numChildrenPickingUp){
-
-        numChildren += numChildrenPickingUp;
-    }
-
-    public static void dropOff(){
-        
-        Debug.Log("Dropping Off: " + numChildren);
-        totalNumChildrenDroppedOff += numChildren;
-        numChildren = 0;
-    }
-
-
-    public List<AxleInfo> axleInfos;
-    public float antiRoll = 5000.0f;
-    public float maxMotorTorque;
-    public float maxSteeringAngle;
-    public Transform cOM;
     private Vector2 _dirInput;
 
     private Rigidbody _rb;
-
-    //these will be static for right now 
-    //if we would ever consider multiplayer (which we won't for the purposes of this game jam) we would have to rewrite a lot of the child drop off and pick up code
-    public static uint numChildren;
-    public static uint totalNumChildrenDroppedOff;
-    public static bool isFlippedOver;
-
+    private AutomobileController _automobile;
 
     //drifting
     Vector3 direction;
@@ -42,7 +20,9 @@ public class BusController : MonoBehaviour {
     float currentDrift;
     float totalDrift;
     public float driftResetThreshold; //if the drift is below this threshold then the driftTotal resets
+
     float prevVelocityMagnitude;
+
     //drifting stats
     public float miniBoostThreshold; //How high the drift -float- has to be before a miniBoost is initiated
     public float miniBoostSpeed; //Speed you get from a mini boost
@@ -52,20 +32,11 @@ public class BusController : MonoBehaviour {
     public float turboBoostSpeed; //Speed you get from a turbo boost
 
 
-    [System.Serializable]
-    public struct AxleInfo {
-
-        public WheelCollider leftWheel;
-        public WheelCollider rightWheel;
-        public bool motor;
-        public bool steering;
-    }
-    
-
     private void Start()
     {
+        isFlippedOver = false;
         _rb = GetComponent<Rigidbody>();
-        _rb.centerOfMass = transform.InverseTransformPoint(cOM.position);
+        _automobile = GetComponent<AutomobileController>();
 
         Drop_Zone_Collisions.setBus(gameObject);
         Pick_Up_Zone_Collisions.setBus(gameObject);
@@ -75,41 +46,20 @@ public class BusController : MonoBehaviour {
     {
         _dirInput.y = Input.GetAxis("Vertical");
         _dirInput.x = Input.GetAxis("Horizontal");
+
+        _automobile.UpdateVisuals();
     }
 
-    private void OnDrawGizmos()
+    public void Explode()
     {
-        _rb = GetComponent<Rigidbody>();
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position + transform.rotation*_rb.centerOfMass, 1f);
+        Debug.Log("Exploding");
     }
 
-    public void ApplyLocalPositionToVisuals(WheelCollider collider)
+
+    public void calculateDrift()
     {
-        if (collider.transform.childCount == 0) {
-            return;
-        }
-     
-        Transform visualWheel = collider.transform.GetChild(0);
-     
-        Vector3 position;
-        Quaternion rotation;
-        collider.GetWorldPose(out position, out rotation);
-     
-        visualWheel.transform.position = position;
-        visualWheel.transform.rotation = rotation;
-    }
-    
-    public static void Explode() {
-
-    }
-
-
-
-    public void calculateDrift() {
-
         direction = transform.forward;
-        velocity = (transform.position - prevPos)/ Time.fixedDeltaTime;
+        velocity = (transform.position - prevPos) / Time.fixedDeltaTime;
         prevPos = transform.position;
 
         currentDrift = Vector3.Cross(direction, velocity).magnitude;
@@ -122,13 +72,13 @@ public class BusController : MonoBehaviour {
 
     //Boosts
     //Add a force to the car when boosting (keeping the addForceAtPosition stuff consistant with the fixedUpdate() stuff)
-    public void miniBoost() {
-        
+    public void miniBoost()
+    {
         Debug.Log(totalDrift);
         _rb.velocity = transform.forward * _rb.velocity.magnitude;
         //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
-        foreach (AxleInfo axleInfo in axleInfos) {
-
+        foreach (AxleInfo axleInfo in _automobile.axleInfos)
+        {
             _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.leftWheel.transform.position);
             _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.rightWheel.transform.position);
         }
@@ -137,12 +87,13 @@ public class BusController : MonoBehaviour {
         totalDrift = 0;
     }
 
-    public void midBoost() {
-        
+    public void midBoost()
+    {
         Debug.Log(totalDrift);
         _rb.velocity = transform.forward * _rb.velocity.magnitude;
         //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
-        foreach (AxleInfo axleInfo in axleInfos) {
+        foreach (AxleInfo axleInfo in _automobile.axleInfos)
+        {
             _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.leftWheel.transform.position);
             _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.rightWheel.transform.position);
         }
@@ -151,12 +102,13 @@ public class BusController : MonoBehaviour {
         totalDrift = 0;
     }
 
-    public void turboBoost() {
-
+    public void turboBoost()
+    {
         Debug.Log(totalDrift);
         _rb.velocity = transform.forward * _rb.velocity.magnitude;
         //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
-        foreach (AxleInfo axleInfo in axleInfos) {
+        foreach (AxleInfo axleInfo in _automobile.axleInfos)
+        {
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.leftWheel.transform.position);
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.rightWheel.transform.position);
         }
@@ -168,48 +120,19 @@ public class BusController : MonoBehaviour {
 
     public void FixedUpdate()
     {
-        float motor = maxMotorTorque * _dirInput.y;
-        float steering = maxSteeringAngle * _dirInput.x;
-     
-        foreach (AxleInfo axleInfo in axleInfos) {
-            if (axleInfo.steering) {
-                axleInfo.leftWheel.steerAngle = steering;
-                axleInfo.rightWheel.steerAngle = steering;
-            }
-            if (axleInfo.motor) {
-                axleInfo.leftWheel.motorTorque = motor;
-                axleInfo.rightWheel.motorTorque = motor;
-            }
-            
-            // anti-roll bars? https://forum.unity.com/threads/how-to-make-a-physically-real-stable-car-with-wheelcolliders.50643/
-            WheelHit hit;
-            var groundedL = axleInfo.leftWheel.GetGroundHit(out hit);
-            var groundedR = axleInfo.rightWheel.GetGroundHit(out hit);
-            var travelL = groundedL ? (axleInfo.leftWheel.transform.InverseTransformPoint(hit.point).y - axleInfo.leftWheel.radius) / axleInfo.leftWheel.suspensionDistance : 1.0f;
-            var travelR = groundedL ? (axleInfo.rightWheel.transform.InverseTransformPoint(hit.point).y - axleInfo.rightWheel.radius) / axleInfo.rightWheel.suspensionDistance : 1.0f;
-
-            var antiRollForce = (travelL-travelR) *antiRoll;
-            
-            if(groundedL) _rb.AddForceAtPosition(axleInfo.leftWheel.transform.up*-antiRollForce, axleInfo.leftWheel.transform.position);
-            if(groundedR) _rb.AddForceAtPosition(axleInfo.rightWheel.transform.up*-antiRollForce, axleInfo.rightWheel.transform.position);
-            
-            // update wheel graphics
-            ApplyLocalPositionToVisuals(axleInfo.leftWheel);
-            ApplyLocalPositionToVisuals(axleInfo.rightWheel);
-        }
-
+        _automobile.Drive(_dirInput);
 
         //just a small check to see if the vehicle is flipped over
         if ((Math.Abs(transform.eulerAngles.x) >= 90 && Math.Abs(transform.eulerAngles.x) <= 270) ||
-            (Math.Abs(transform.eulerAngles.z) >= 90 && Math.Abs(transform.eulerAngles.z) <= 270)) {
-
-                isFlippedOver = true;
-                Explode();
+            (Math.Abs(transform.eulerAngles.z) >= 90 && Math.Abs(transform.eulerAngles.z) <= 270))
+        {
+            isFlippedOver = true;
+            Explode();
         }
 
 
         //Drifting stuff
-        this.calculateDrift();
+        calculateDrift();
 
         if (_dirInput.x == 0 && totalDrift >= turboBoostThreshold)
             turboBoost();

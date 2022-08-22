@@ -10,7 +10,7 @@ public class Drop_Zone_Collisions : MonoBehaviour
     void OnTriggerEnter(Collider collider){
 
         if (collider == busObject.GetComponent<BoxCollider>())
-            BusController.dropOff();
+            Bus.dropOff();
                
     }
 
