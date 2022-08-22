@@ -10,20 +10,20 @@ public class Bitmap
     
 }
 
-
-[CustomEditor(typeof(WFC))]
-class DecalMeshHelperEditor : Editor {
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        var wfc = (WFC)target;
-        if (GUILayout.Button("GenerateTest"))
-        {
-            Debug.Log("Generating");
-            wfc.GenerateTest();
-        }
-    }
-}
+//I am assuming we don't need this anymore
+// [CustomEditor(typeof(WFC))]
+// class DecalMeshHelperEditor : Editor{ 
+//     public override void OnInspectorGUI()
+//     {
+//         DrawDefaultInspector();
+//         var wfc = (WFC)target;
+//         if (GUILayout.Button("GenerateTest"))
+//         {
+//             Debug.Log("Generating");
+//             wfc.GenerateTest();
+//         }
+//     }
+// }
 public class WFC : MonoBehaviour
 {
     public RawImage image;
