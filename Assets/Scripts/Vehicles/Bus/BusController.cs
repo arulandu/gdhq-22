@@ -125,38 +125,44 @@ public class BusController : MonoBehaviour {
     public void miniBoost() {
         
         Debug.Log(totalDrift);
-        prevVelocityMagnitude = _rb.velocity.magnitude;
+        _rb.velocity = transform.forward * _rb.velocity.magnitude;
+        //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
         foreach (AxleInfo axleInfo in axleInfos) {
 
-            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + miniBoostSpeed), axleInfo.leftWheel.transform.position);
-            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + miniBoostSpeed), axleInfo.rightWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.leftWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.rightWheel.transform.position);
         }
 
         Debug.Log("isMiniBoosting");
+        totalDrift = 0;
     }
 
     public void midBoost() {
         
         Debug.Log(totalDrift);
-        prevVelocityMagnitude = _rb.velocity.magnitude;
+        _rb.velocity = transform.forward * _rb.velocity.magnitude;
+        //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
         foreach (AxleInfo axleInfo in axleInfos) {
-            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + midBoostSpeed), axleInfo.leftWheel.transform.position);
-            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + midBoostSpeed), axleInfo.rightWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.leftWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.rightWheel.transform.position);
         }
 
         Debug.Log("isMidBoosting");
+        totalDrift = 0;
     }
 
     public void turboBoost() {
 
         Debug.Log(totalDrift);
-        prevVelocityMagnitude = _rb.velocity.magnitude;
+        _rb.velocity = transform.forward * _rb.velocity.magnitude;
+        //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
         foreach (AxleInfo axleInfo in axleInfos) {
-            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + turboBoostSpeed), axleInfo.leftWheel.transform.position);
-            _rb.AddForceAtPosition(transform.forward * (prevVelocityMagnitude + turboBoostSpeed), axleInfo.rightWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.leftWheel.transform.position);
+            _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.rightWheel.transform.position);
         }
 
         Debug.Log("isTurboBoosting");
+        totalDrift = 0;
     }
 
 
