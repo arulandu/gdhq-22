@@ -73,12 +73,11 @@ public class CityGenerator : MonoBehaviour {
 
         Texture2D WFCTexture = WFC.Generate(pattern, 3, width, height, false, true, false, 8, (int)1e9, 1);
 
-        
         //loop through the WFC texture and generate a street if the pixel is the right color
         for (int xTextureIndex = 0; xTextureIndex < width; xTextureIndex += textureResolution) {
-            for (int yTextureIndex = 0; yTextureIndex < height; yTextureIndex+= textureResolution) { 
+            for (int yTextureIndex = 0; yTextureIndex < height; yTextureIndex += textureResolution) { 
 
-                Debug.Log(xTextureIndex + " " + yTextureIndex);
+                //Debug.Log(xTextureIndex + " " + yTextureIndex);
                 
                 Color pixelColor = WFCTexture.GetPixel(xTextureIndex, yTextureIndex);
 
@@ -129,6 +128,7 @@ public class CityGenerator : MonoBehaviour {
             return true;
         return false;
     }
+    
 
     void generateGrass (CityGenerator thisClass) {
 
@@ -165,8 +165,8 @@ public class CityGenerator : MonoBehaviour {
              cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the right
             
             var house = Instantiate (cityElements[(int)cityElementsNames.houseRight], new Vector3 (houseRightOffsetX + (xIndex * tileSize), defaultYPos, houseRightOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 180, 0), transform);
-            generatePickUpZone (++xIndex, zIndex,   cityMap,   house);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseRight;
+            generatePickUpZone (++xIndex, zIndex,   cityMap,   house);
             houseCount++;
             
         }
@@ -177,8 +177,8 @@ public class CityGenerator : MonoBehaviour {
             cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the left
 
             var house = Instantiate (cityElements[(int)cityElementsNames.houseLeft], new Vector3 (houseLeftOffsetX + (xIndex * tileSize), defaultYPos, houseLeftOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 0, 0), transform);
-            generatePickUpZone (xIndex, zIndex,   cityMap,   house);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseLeft;
+            generatePickUpZone (xIndex, zIndex,   cityMap,   house);
             houseCount++;
         }
 
@@ -188,8 +188,8 @@ public class CityGenerator : MonoBehaviour {
             cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetZ)) { //street above
 
             var house = Instantiate (cityElements[(int)cityElementsNames.houseUp], new Vector3 (houseUpOffsetX + (xIndex * tileSize), defaultYPos, houseUpOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 90, 0), transform);
+            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseUp;
             generatePickUpZone (xIndex, ++zIndex,   cityMap,   house);
-            cityMap [xIndex, ++zIndex] = (int)cityElementsNames.houseUp;
             houseCount++;
         }
 
@@ -199,8 +199,8 @@ public class CityGenerator : MonoBehaviour {
             cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetZ)) {//street below
 
             var house = Instantiate (cityElements[(int)cityElementsNames.houseDown], new Vector3 (houseDownOffsetX + (xIndex * tileSize), defaultYPos, houseDownOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 270, 0), transform);
-            generatePickUpZone (xIndex, --zIndex,   cityMap,   house);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseDown;
+            generatePickUpZone (xIndex, --zIndex,   cityMap,   house);
             houseCount++;
         }
     }
@@ -267,8 +267,18 @@ public class CityGenerator : MonoBehaviour {
         }
     }
 
+
     void Awake(){
         WFCToStreet (this);
+        int numStreet = 0;
+        for (int x = 0; x < cityMap.GetLength(0); x++) {
+            for (int y = 0; y < cityMap.GetLength(1); y++) {
+                if (cityMap[x,y] == 8 || cityMap[x,y] == 9 || cityMap[x,y] == 10)
+                    numStreet++;
+            }
+        }
+
+        Debug.Log("Number of Streets: " + numStreet);
     }
 
 

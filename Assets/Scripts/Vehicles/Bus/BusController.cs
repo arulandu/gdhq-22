@@ -24,8 +24,8 @@ public class BusController : MonoBehaviour
     float prevVelocityMagnitude;
 
     //drifting stats
-    public float miniBoostThreshold; //How high the drift -float- has to be before a miniBoost is initiated
-    public float miniBoostSpeed; //Speed you get from a mini boost
+    //public float miniBoostThreshold; //How high the drift -float- has to be before a miniBoost is initiated
+    //public float miniBoostSpeed; //Speed you get from a mini boost
     public float midBoostThreshold; //How high the drift -float- has to be before a midBoost is initiated
     public float midBoostSpeed; //Speed you get from a mid boost
     public float turboBoostThreshold; //How high the drift -float- has to be before a turboBoost is initiated
@@ -74,21 +74,21 @@ public class BusController : MonoBehaviour
 
 
     //Boosts
-    //Add a force to the car when boosting (keeping the addForceAtPosition stuff consistant with the fixedUpdate() stuff)
-    public void miniBoost()
-    {
-        Debug.Log(totalDrift);
-        _rb.velocity = transform.forward * _rb.velocity.magnitude;
-        //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
-        foreach (AxleInfo axleInfo in _automobile.axleInfos)
-        {
-            _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.leftWheel.transform.position);
-            _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.rightWheel.transform.position);
-        }
+    // //Add a force to the car when boosting (keeping the addForceAtPosition stuff consistant with the fixedUpdate() stuff)
+    // public void miniBoost()
+    // {
+    //     Debug.Log(totalDrift);
+    //     _rb.velocity = transform.forward * _rb.velocity.magnitude;
+    //     //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
+    //     foreach (AxleInfo axleInfo in _automobile.axleInfos)
+    //     {
+    //         _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.leftWheel.transform.position);
+    //         _rb.AddForceAtPosition(transform.forward * (miniBoostSpeed), axleInfo.rightWheel.transform.position);
+    //     }
 
-        Debug.Log("isMiniBoosting");
-        totalDrift = 0;
-    }
+    //     Debug.Log("isMiniBoosting");
+    //     totalDrift = 0;
+    // }
 
     public void midBoost()
     {
@@ -101,7 +101,7 @@ public class BusController : MonoBehaviour
             _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.rightWheel.transform.position);
         }
 
-        Debug.Log("isMidBoosting");
+        //Debug.Log("isMidBoosting");
         totalDrift = 0;
     }
 
@@ -116,7 +116,7 @@ public class BusController : MonoBehaviour
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.rightWheel.transform.position);
         }
 
-        Debug.Log("isTurboBoosting");
+        //Debug.Log("isTurboBoosting");
         totalDrift = 0;
     }
 
@@ -143,8 +143,8 @@ public class BusController : MonoBehaviour
         else if (_dirInput.x == 0 && totalDrift >= midBoostThreshold)
             midBoost();
 
-        else if (_dirInput.x == 0 && totalDrift >= miniBoostThreshold)
-            miniBoost();
+        // else if (_dirInput.x == 0 && totalDrift >= miniBoostThreshold)
+             // miniBoost();
 
 
         //Debug.Log(drift);
