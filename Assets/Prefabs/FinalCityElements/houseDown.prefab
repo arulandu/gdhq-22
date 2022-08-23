@@ -261,6 +261,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6301505861998897958}
   - component: {fileID: 8984178552716468966}
+  - component: {fileID: 1563598926304576291}
   m_Layer: 0
   m_Name: houseDown
   m_TagString: Untagged
@@ -302,6 +303,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 20, y: 12, z: 20}
   m_Center: {x: -4, y: 6, z: 0}
+--- !u!114 &1563598926304576291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5713858235458742682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 066dbb566f1b45d41955577f2150b249, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  childPrefab: {fileID: 4477214600545642047, guid: 9c67232128456d048b4ea52fb5e7c69e,
+    type: 3}
+  childRotation: {x: 0, y: 0, z: 0, w: 1}
+  spawningSpots:
+  - {x: 0, y: 0, z: -3}
 --- !u!1 &6152566958792548423
 GameObject:
   m_ObjectHideFlags: 0

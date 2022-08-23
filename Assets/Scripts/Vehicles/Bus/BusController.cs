@@ -64,7 +64,9 @@ public class BusController : MonoBehaviour
         prevPos = transform.position;
 
         currentDrift = Vector3.Cross(direction, velocity.normalized).magnitude;
-        totalDrift += currentDrift;
+
+        if (_dirInput.y >= 0)
+            totalDrift += currentDrift;
 
         if (currentDrift <= driftResetThreshold) //reset the total drift if it is too low
             totalDrift = 0;

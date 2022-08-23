@@ -6,7 +6,8 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
 {
     bool alreadyVisited;
     public uint numChildrenAtPickUp; //number of children at this pick up zone
-    static GameObject busObject; //initialize this in the editor to whatever collider the bus is using
+    static GameObject busObject; //initialize this when it is instantiated
+    GameObject houseObject; //initialize this when it is instantiated
 
     void Awake(){
 
@@ -21,10 +22,16 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
 
             alreadyVisited = true;
             Bus.pickUp(numChildrenAtPickUp);
+            houseObject.GetComponent<houseScript>().removeChild();
         }
     }
 
     public static void setBus(GameObject busObject_) {
         busObject = busObject_;
     }
+
+    public void setHouse (GameObject houseObject_) {
+        houseObject = houseObject_;
+    }
+
 }

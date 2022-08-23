@@ -164,9 +164,9 @@ public class CityGenerator : MonoBehaviour {
              cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetX || 
              cityMap [xIndex + 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the right
             
-            Instantiate (cityElements[(int)cityElementsNames.houseRight], new Vector3 (houseRightOffsetX + (xIndex * tileSize), defaultYPos, houseRightOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 180, 0), transform);
-            generatePickUpZone (xIndex, zIndex,   cityMap);
-            cityMap [++xIndex, zIndex] = (int)cityElementsNames.houseRight;
+            var house = Instantiate (cityElements[(int)cityElementsNames.houseRight], new Vector3 (houseRightOffsetX + (xIndex * tileSize), defaultYPos, houseRightOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 180, 0), transform);
+            generatePickUpZone (++xIndex, zIndex,   cityMap,   house);
+            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseRight;
             houseCount++;
             
         }
@@ -176,9 +176,9 @@ public class CityGenerator : MonoBehaviour {
             cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetX || 
             cityMap [xIndex - 1, zIndex] == (int)cityElementsNames.streetZ)) { //street to the left
 
-            Instantiate (cityElements[(int)cityElementsNames.houseLeft], new Vector3 (houseLeftOffsetX + (xIndex * tileSize), defaultYPos, houseLeftOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 0, 0), transform);
-            generatePickUpZone (xIndex, zIndex,   cityMap);
-            cityMap [--xIndex, zIndex] = (int)cityElementsNames.houseLeft;
+            var house = Instantiate (cityElements[(int)cityElementsNames.houseLeft], new Vector3 (houseLeftOffsetX + (xIndex * tileSize), defaultYPos, houseLeftOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 0, 0), transform);
+            generatePickUpZone (xIndex, zIndex,   cityMap,   house);
+            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseLeft;
             houseCount++;
         }
 
@@ -187,9 +187,9 @@ public class CityGenerator : MonoBehaviour {
             cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetX || 
             cityMap [xIndex, zIndex + 1] == (int)cityElementsNames.streetZ)) { //street above
 
-            Instantiate (cityElements[(int)cityElementsNames.houseUp], new Vector3 (houseUpOffsetX + (xIndex * tileSize), defaultYPos, houseUpOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 90, 0), transform);
-            generatePickUpZone (xIndex, ++zIndex,   cityMap);
-            cityMap [xIndex, zIndex] = (int)cityElementsNames.houseUp;
+            var house = Instantiate (cityElements[(int)cityElementsNames.houseUp], new Vector3 (houseUpOffsetX + (xIndex * tileSize), defaultYPos, houseUpOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 90, 0), transform);
+            generatePickUpZone (xIndex, ++zIndex,   cityMap,   house);
+            cityMap [xIndex, ++zIndex] = (int)cityElementsNames.houseUp;
             houseCount++;
         }
 
@@ -198,8 +198,8 @@ public class CityGenerator : MonoBehaviour {
             cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetX || 
             cityMap [xIndex, zIndex - 1] == (int)cityElementsNames.streetZ)) {//street below
 
-            Instantiate (cityElements[(int)cityElementsNames.houseDown], new Vector3 (houseDownOffsetX + (xIndex * tileSize), defaultYPos, houseDownOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 270, 0), transform);
-            generatePickUpZone (xIndex, --zIndex,   cityMap);
+            var house = Instantiate (cityElements[(int)cityElementsNames.houseDown], new Vector3 (houseDownOffsetX + (xIndex * tileSize), defaultYPos, houseDownOffsetZ + (zIndex * tileSize)), Quaternion.Euler (0, 270, 0), transform);
+            generatePickUpZone (xIndex, --zIndex,   cityMap,   house);
             cityMap [xIndex, zIndex] = (int)cityElementsNames.houseDown;
             houseCount++;
         }
@@ -212,11 +212,15 @@ public class CityGenerator : MonoBehaviour {
         return false;
     }
 
-    void generatePickUpZone (int xIndex, int zIndex,   int [ , ] cityMap) {
+    void generatePickUpZone (int xIndex, int zIndex,   int [ , ] cityMap,   GameObject house) {
 
+
+        //this doesn't work on up? and left facing houses
         if (random.Next(0, pickUpZoneProbability) == 0) {
-            var pickUpZoneTemp = Instantiate (cityElements[(int)cityElementsNames.pickUpZone], new Vector3 ((tileSize / 2) + (xIndex * tileSize), defaultYPos, (tileSize / 2) + (zIndex * tileSize)), Quaternion.identity, transform);
-            pickUpZoneTemp.transform.localScale = new Vector3 (tileSize, tileSize, tileSize);
+            var pickUpZoneTemp = Instantiate (cityElements[(int)cityElementsNames.pickUpZone], new Vector3 ((xIndex * tileSize), defaultYPos, (tileSize / 2) + (zIndex * tileSize)), Quaternion.identity);
+            pickUpZoneTemp.transform.localScale = new Vector3 (tileSize * 1.5f, tileSize * 1.5f, tileSize * 1.5f);
+            pickUpZoneTemp.GetComponent<Pick_Up_Zone_Collisions>().setHouse(house);
+            house.GetComponent<houseScript>().addChild();
             isPickUpZone [new Vector2 (xIndex, zIndex)] = true;
         }
         else
