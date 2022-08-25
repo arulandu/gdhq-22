@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Drop_Zone
   - Bus
+  - CityGenerator
   layers:
   - Default
   - TransparentFX

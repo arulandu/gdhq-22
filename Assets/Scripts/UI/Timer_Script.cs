@@ -8,8 +8,8 @@ public class Timer_Script : MonoBehaviour
 
     public static Timer_Script timer_Script;
 
-    public uint totalSeconds; //set this in the editor
-    public uint totalMinutes; //set this in the editor
+    public static uint totalSeconds; //set this in the editor
+    public static uint totalMinutes; //set this in the editor
     public static uint framesLeft; 
 
     public static uint dangerModeSeconds = 30;
@@ -68,13 +68,24 @@ public class Timer_Script : MonoBehaviour
     void Awake(){
 
         timer_Script = gameObject.GetComponent<Timer_Script>();
-
         timerText = gameObject.GetComponent<TextMeshProUGUI>();
+
+    }
+
+    //called from level selector
+    public static void setTime(uint totalMinutes_, uint totalSeconds_) {
+
+        Debug.Log("Setting Time");
+        totalMinutes = totalMinutes_;
+        totalSeconds = totalSeconds_;
 
         framesLeft = (totalMinutes * 3600) + (totalSeconds * 60);    
         timeFormat.setTime(framesLeft);
         timerText.text = timeFormat.toString();
+
+        Debug.Log("Setting Time");
     }
+    
 
     void FixedUpdate(){
 
