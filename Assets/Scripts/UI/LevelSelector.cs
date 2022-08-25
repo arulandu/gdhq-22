@@ -7,27 +7,33 @@ using UnityEngine.SceneManagement;
 public class Level {
 
     public Texture2D texture;
-    public uint size; //unused for right now
+    public uint size;
     public uint totalSeconds;
     public uint totalMinutes;
+    public Vector3 busSpawnPos;
 }
 
 public class LevelSelector : MonoBehaviour
 {  
     public Level[] levels; //set in the editor
-    int currentLevel = 1; //change this in order to change the level that you are currently on
+    int currentLevel = 2; //change this in order to change the level that you are currently on
     public string mainSceneName = "CarPlayground";
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode){
-        Debug.Log("HI");
+ 
         if (scene.name == mainSceneName){
             
             Timer_Script.setTime(levels[currentLevel - 1].totalMinutes, levels[currentLevel - 1].totalSeconds);
 
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator")){ 
-                Debug.Log(obj);
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Bus"))
+                obj.transform.position = levels[currentLevel - 1].busSpawnPos;
+
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Border"))
+                obj.GetComponent<borderScript>().setSize(levels[currentLevel - 1].size);
+
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator"))
                 obj.GetComponent<CityGenerator>().pattern = levels[currentLevel - 1].texture;
-            }
+            
         }
     }
 
