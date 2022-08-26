@@ -8,6 +8,7 @@ TagManager:
   - Bus
   - CityGenerator
   - Border
+  - EventSystem
   layers:
   - Default
   - TransparentFX
