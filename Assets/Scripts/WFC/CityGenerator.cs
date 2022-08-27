@@ -5,6 +5,8 @@ using System;
 
 public class CityGenerator : MonoBehaviour {
 
+    public GameObject busObject; //should be set in the editor
+
     //stats (cannot be tweaked in the editor must be tweaked in script)
     public float tileSize {get;} = 6; //the size of tiles in the gameWorld
     public int defaultYPos {get;} = 9;
@@ -89,8 +91,8 @@ public class CityGenerator : MonoBehaviour {
 
         generateGrass (thisClass);
         generateHouses (thisClass);
-        generateSchool (thisClass);
-        generateCars (thisClass);
+        generateSchool (thisClass, busObject);
+        //generateCars (thisClass);
     }
 
     //generate a street at the specified point in space
@@ -217,7 +219,7 @@ public class CityGenerator : MonoBehaviour {
 
         //this doesn't work on up? and left facing houses
         if (random.Next(0, pickUpZoneProbability) == 0) {
-            var pickUpZoneTemp = Instantiate (cityElements[(int)cityElementsNames.pickUpZone], new Vector3 ((xIndex * tileSize), defaultYPos, (tileSize / 2) + (zIndex * tileSize)), Quaternion.identity);
+            var pickUpZoneTemp = Instantiate (cityElements[(int)cityElementsNames.pickUpZone], new Vector3 ((xIndex * tileSize), defaultYPos, (tileSize / 2) + (zIndex * tileSize)), Quaternion.identity, transform);
             pickUpZoneTemp.transform.localScale = new Vector3 (tileSize * 1.5f, tileSize * 1.5f, tileSize * 1.5f);
             pickUpZoneTemp.GetComponent<Pick_Up_Zone_Collisions>().setHouse(house);
             house.GetComponent<houseScript>().addChild();
@@ -229,9 +231,10 @@ public class CityGenerator : MonoBehaviour {
 
 
 
-    void generateSchool (CityGenerator thisClass) {
+    void generateSchool (CityGenerator thisClass,  GameObject bus) {
 
-        Instantiate (cityElements [(int) cityElementsNames.school], new Vector3 (4 * tileSize, defaultYPos, -1 * tileSize), Quaternion.Euler (0, 90, 0), transform);
+        var school = Instantiate (cityElements [(int) cityElementsNames.school], new Vector3 (4 * tileSize, defaultYPos, -1 * tileSize), Quaternion.Euler (0, 90, 0), transform);
+        
         Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (4 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
         Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (3 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
         Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (2 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
@@ -268,17 +271,8 @@ public class CityGenerator : MonoBehaviour {
     }
 
 
-    void Awake(){
+    void Start(){
         WFCToStreet (this);
-        int numStreet = 0;
-        for (int x = 0; x < cityMap.GetLength(0); x++) {
-            for (int y = 0; y < cityMap.GetLength(1); y++) {
-                if (cityMap[x,y] == 8 || cityMap[x,y] == 9 || cityMap[x,y] == 10)
-                    numStreet++;
-            }
-        }
-
-        Debug.Log("Number of Streets: " + numStreet);
     }
 
 

@@ -34,6 +34,12 @@ public class Score_Script : MonoBehaviour
 
     public Score_Effects scoreEffects;
 
+
+    public uint getScore() {
+        return score;
+    }
+
+
     //this is called in start so that framesLeft is already initialized since Start is called after Awake
     void Start(){
 

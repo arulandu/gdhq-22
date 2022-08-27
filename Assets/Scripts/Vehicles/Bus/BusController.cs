@@ -92,7 +92,7 @@ public class BusController : MonoBehaviour
 
     public void midBoost()
     {
-        Debug.Log(totalDrift);
+
         _rb.velocity = transform.forward * _rb.velocity.magnitude;
         //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
         foreach (AxleInfo axleInfo in _automobile.axleInfos)
@@ -107,7 +107,7 @@ public class BusController : MonoBehaviour
 
     public void turboBoost()
     {
-        Debug.Log(totalDrift);
+
         _rb.velocity = transform.forward * _rb.velocity.magnitude;
         //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
         foreach (AxleInfo axleInfo in _automobile.axleInfos)

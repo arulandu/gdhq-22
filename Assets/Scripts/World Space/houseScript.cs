@@ -15,7 +15,7 @@ public class houseScript : MonoBehaviour
 
     public void addChild() {
 
-        childrenList.Add(Instantiate(childPrefab, chooseSpawningSpot(), childRotation));
+        childrenList.Add(Instantiate(childPrefab, chooseSpawningSpot(), childRotation, transform));
     }
 
     Vector3 chooseSpawningSpot() {

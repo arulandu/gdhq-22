@@ -7,15 +7,19 @@ public class Timer_Script : MonoBehaviour
 {
 
     public static Timer_Script timer_Script;
+    public gameOver gameOverScript;
 
-    public uint totalSeconds; //set this in the editor
-    public uint totalMinutes; //set this in the editor
+    public static uint totalSeconds; //set this in the editor
+    public static uint totalMinutes; //set this in the editor
     public static uint framesLeft; 
 
     public static uint dangerModeSeconds = 30;
     public static uint dangerModeMinutes = 0;
 
+    public static bool isFinalCountdown = false;
+
     public static TextMeshProUGUI timerText;
+    public static TextMeshProUGUI finalCountdownText;
 
     public Color dangerModeColor;
 
@@ -47,12 +51,18 @@ public class Timer_Script : MonoBehaviour
     //Called whenever you want to write the frame number to the timerText
     static void UIUpdate(){
 
+        
         timeFormat.setTime(framesLeft);
 
         if (timeFormat.minutes <= dangerModeMinutes && timeFormat.seconds <= dangerModeSeconds)
             enableDangerMode();
 
-        timerText.text = "Time Left: " + timeFormat.toString();
+        if (!isFinalCountdown)
+            timerText.text = "Time Left: " + timeFormat.toString();
+        else  {
+            Debug.Log(isFinalCountdown);
+            finalCountdownText.text = timeFormat.toString();
+        }
     }
 
     //makes the text become red and might make some sound thing play whenever the timer is below a certain threshold
@@ -61,27 +71,57 @@ public class Timer_Script : MonoBehaviour
         timerText.color = timer_Script.dangerModeColor;
     }
 
+    static void enableFinalCountDown(){
+
+        timerText.enabled = false;
+        isFinalCountdown = true;
+    }
+
+
     //Do whatever method you want whenever the player game overs
-    static void gameOver(){} //TODO
+    static void gameOver(){
+        //pause the game
+
+        //Display a "Stop Sign" when the game is over
+
+        //Display score
+
+    } //TODO
 
     //Initialize everything
     void Awake(){
 
+        finalCountdownText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         timer_Script = gameObject.GetComponent<Timer_Script>();
-
         timerText = gameObject.GetComponent<TextMeshProUGUI>();
+
+    }
+
+    //called from level selector
+    public static void setTime(uint totalMinutes_, uint totalSeconds_) {
+
+        Debug.Log("Setting Time");
+        totalMinutes = totalMinutes_;
+        totalSeconds = totalSeconds_;
 
         framesLeft = (totalMinutes * 3600) + (totalSeconds * 60);    
         timeFormat.setTime(framesLeft);
+
         timerText.text = timeFormat.toString();
+
+        Debug.Log("Setting Time");
     }
+    
 
     void FixedUpdate(){
 
         if (framesLeft == 0)
-            gameOver();
+            gameOverScript.startGameOver();
         else
             framesLeft--;
+
+        if (framesLeft < 240)
+            enableFinalCountDown();
 
         UIUpdate();
     }
