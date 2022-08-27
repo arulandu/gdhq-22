@@ -62,6 +62,7 @@ public class CityGenerator : MonoBehaviour {
         pickUpZone = 12,
         dropOffZone = 13,
         car = 14
+
     }
 
     void WFCToStreet(CityGenerator thisClass) {
@@ -269,7 +270,6 @@ public class CityGenerator : MonoBehaviour {
             Instantiate (cityElements[(int)cityElementsNames.car], new Vector3 (xIndex * tileSize, defaultYPos, zIndex * tileSize), Quaternion.Euler (0, 0, 0), transform);
         }
     }
-
 
     void Start(){
         WFCToStreet (this);

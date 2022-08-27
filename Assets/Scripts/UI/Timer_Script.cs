@@ -115,8 +115,12 @@ public class Timer_Script : MonoBehaviour
 
     void FixedUpdate(){
 
-        if (framesLeft == 0)
+        if (framesLeft == 0) {
+
+            finalCountdownText.text = "";
             gameOverScript.startGameOver();
+            gameObject.SetActive(false); //make sure it stops calling startGameOver() after it is already called
+        }
         else
             framesLeft--;
 
