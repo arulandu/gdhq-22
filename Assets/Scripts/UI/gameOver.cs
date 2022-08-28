@@ -16,14 +16,15 @@ public class gameOver : MonoBehaviour
     public TextMeshProUGUI promptText; //prompts the user to press any button to return to the main menu
 
     public Vector3 stopSignInitialPos;
-    public Vector3 stopSignFinalPos;
-    [Range(0, 1)]
+    
+
     public float stopSignPos; //lerp fraction between two points 
     public float stopSignSpeed; //how the previous changes over time
 
     bool isMovingStopSign = false;
     bool isWaitingForStopSign = false;
     bool isWaitingForButtonPress = false;
+    Vector3 stopSignFinalPos = new Vector3(Screen.width / 2, Screen.height / 2);
 
     public float waitAfterStopSign = 2f;
 
