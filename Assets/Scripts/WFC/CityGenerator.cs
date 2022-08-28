@@ -31,6 +31,7 @@ public class CityGenerator : MonoBehaviour {
     public float houseRightOffsetX;
     public float houseRightOffsetZ;
 
+    public int totalNumChildren = 0;
     public int houseCount = 0;
     public bool isSchool = false;
 
@@ -228,6 +229,8 @@ public class CityGenerator : MonoBehaviour {
         }
         else
             isPickUpZone [new Vector2 (xIndex, zIndex)] = false;
+
+        totalNumChildren++;
     }
 
 
