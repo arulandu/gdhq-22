@@ -9,7 +9,7 @@ public class BusController : MonoBehaviour
     public bool isFlippedOver = false;
 
     private Vector2 _dirInput;
-    public static bool takeInput = true;
+    public bool takeInput = true;
 
     private Rigidbody _rb;
     private AutomobileController _automobile;

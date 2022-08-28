@@ -16,7 +16,7 @@ public class Timer_Script : MonoBehaviour
     public static uint dangerModeSeconds = 30;
     public static uint dangerModeMinutes = 0;
 
-    public static bool isFinalCountdown = false;
+    public bool isFinalCountdown = false;
 
     public static TextMeshProUGUI timerText;
     public static TextMeshProUGUI finalCountdownText;
@@ -49,7 +49,7 @@ public class Timer_Script : MonoBehaviour
 
     //Updates the UI
     //Called whenever you want to write the frame number to the timerText
-    static void UIUpdate(){
+    void UIUpdate(){
 
         
         timeFormat.setTime(framesLeft);
@@ -59,10 +59,9 @@ public class Timer_Script : MonoBehaviour
 
         if (!isFinalCountdown)
             timerText.text = "Time Left: " + timeFormat.toString();
-        else  {
-            Debug.Log(isFinalCountdown);
+        else  
             finalCountdownText.text = timeFormat.toString();
-        }
+        
     }
 
     //makes the text become red and might make some sound thing play whenever the timer is below a certain threshold
@@ -71,7 +70,7 @@ public class Timer_Script : MonoBehaviour
         timerText.color = timer_Script.dangerModeColor;
     }
 
-    static void enableFinalCountDown(){
+    void enableFinalCountDown(){
 
         timerText.enabled = false;
         isFinalCountdown = true;

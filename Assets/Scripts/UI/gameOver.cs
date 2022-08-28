@@ -8,6 +8,7 @@ public class gameOver : MonoBehaviour
 {
     public GameObject stopSignObject;
     
+    public BusController busController;
     public Score_Script scoreScript;
 
     public TextMeshProUGUI scoreText;
@@ -36,7 +37,7 @@ public class gameOver : MonoBehaviour
 
 
     void lockControls() {      
-        BusController.takeInput = false;
+        busController.takeInput = false;
     }
 
     void displayStopSign() {
