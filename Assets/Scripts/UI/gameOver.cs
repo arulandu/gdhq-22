@@ -1,26 +1,19 @@
-// using System.Collections;
+using System.Collections;
 // using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-//
-//
-//MOST OF THIS STUFF DOESN'T WORK CURRENTLY
-//
-//
-//
-
-
-
 public class gameOver : MonoBehaviour
 {
     public GameObject stopSignObject;
     
+    public BusController busController;
     public Score_Script scoreScript;
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI totalNumChildrenDroppedOffText;
+    public TextMeshProUGUI promptText; //prompts the user to press any button to return to the main menu
 
     public Vector3 stopSignInitialPos;
     public Vector3 stopSignFinalPos;
@@ -28,34 +21,34 @@ public class gameOver : MonoBehaviour
     public float stopSignPos; //lerp fraction between two points 
     public float stopSignSpeed; //how the previous changes over time
 
-    bool isDisplayingStopSign = false;
+    bool isMovingStopSign = false;
+    bool isWaitingForStopSign = false;
+    bool isWaitingForButtonPress = false;
 
-
+    public float waitAfterStopSign = 2f;
 
     public void startGameOver() {
 
         Debug.Log("Starting Game Over");
         lockControls();
         displayStopSign();
-        destroyCity();
-        displayScore();
+        //displayScore();
     }   
 
 
-    void lockControls() {
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("EventSystem")) 
-            obj.SetActive(false);
+    void lockControls() {      
+        busController.takeInput = false;
     }
-
 
     void displayStopSign() {
-        isDisplayingStopSign = true;
+        isMovingStopSign = true;
     }
 
-    void destroyCity() { //for lag reasons
-
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator"))
-            Destroy(obj);
+    void moveStopSign() { //move stop sign to the center of the screen
+        
+        stopSignPos += stopSignSpeed;
+        stopSignObject.transform.position = Vector3.Lerp(stopSignInitialPos, stopSignFinalPos, stopSignPos);
+        Debug.Log(stopSignPos);
     }
 
     void displayScore() {
@@ -64,26 +57,56 @@ public class gameOver : MonoBehaviour
         totalNumChildrenDroppedOffText.text = "Number of Children Dropped Off: " + Bus.totalNumChildrenDroppedOff;
     }
 
+    void displayPrompt() {
+        promptText.gameObject.SetActive(true);
+    }
+
     void exitToMainMenu() {
 
         SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Single);
     }
 
 
-    //Helper methods
-    void moveStopSign() { //move stop sign to the center of the screen
-        
-        stopSignPos += stopSignSpeed;
-        Vector3.Lerp(stopSignInitialPos, stopSignFinalPos, stopSignPos);
+
+    void destroyCity() { //for lag reasons
+
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator"))
+            Destroy(obj);
     }
+
+
+
 
     void Awake() {
         stopSignInitialPos = stopSignObject.transform.position;
     }
 
-    void Update() {
+    void Update() { //this is terribly coded but whatever
 
-        if (isDisplayingStopSign)
+        if (isWaitingForButtonPress && Input.anyKey) //called last
+            exitToMainMenu();
+        
+        else if (isWaitingForButtonPress) //called fourth
+            displayPrompt();
+    
+        else if (isWaitingForStopSign) //called third
+            displayScore();
+
+        else if (stopSignPos >= 1) //if the stop sign is at its final position  //called second
+            StartCoroutine(inStopSignWait());
+
+        else if (isMovingStopSign)  //called first
             moveStopSign();
+    }
+
+
+
+    IEnumerator inStopSignWait() {
+
+        isWaitingForStopSign = true;
+
+        yield return new WaitForSeconds(waitAfterStopSign);
+        
+        isWaitingForButtonPress = true;
     }
 }

@@ -9,6 +9,7 @@ public class BusController : MonoBehaviour
     public bool isFlippedOver = false;
 
     private Vector2 _dirInput;
+    public bool takeInput = true;
 
     private Rigidbody _rb;
     private AutomobileController _automobile;
@@ -45,8 +46,14 @@ public class BusController : MonoBehaviour
 
     private void Update()
     {
-        _dirInput.y = Input.GetAxis("Vertical");
-        _dirInput.x = Input.GetAxis("Horizontal");
+        if (takeInput) {
+            _dirInput.y = Input.GetAxis("Vertical");
+            _dirInput.x = Input.GetAxis("Horizontal");
+        }
+        else {
+            _dirInput = new Vector2(0,0);
+            _rb.velocity = new Vector3(0, 0, 0);
+        }
 
         _automobile.UpdateVisuals();
     }

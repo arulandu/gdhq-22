@@ -248,7 +248,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 207934166}
         m_TargetAssemblyTypeName: SceneControl, Assembly-CSharp
-        m_MethodName: startGame
+        m_MethodName: levelSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1668,12 +1668,18 @@ MonoBehaviour:
     size: 48
     totalSeconds: 0
     totalMinutes: 1
-    busSpawnPos: {x: 16.41, y: 9.3, z: 0}
+    busSpawnPos: {x: 24, y: 9.3, z: 0}
   - texture: {fileID: 2800000, guid: 3d3585cb6bd8b9d45bd28cac4aca4b46, type: 3}
     size: 100
     totalSeconds: 30
     totalMinutes: 1
     busSpawnPos: {x: 24, y: 9.3, z: 0}
+  - texture: {fileID: 2800000, guid: 3d3585cb6bd8b9d45bd28cac4aca4b46, type: 3}
+    size: 10
+    totalSeconds: 10
+    totalMinutes: 0
+    busSpawnPos: {x: 24, y: 9.3, z: 0}
+  currentLevel: 3
   mainSceneName: CarPlayground
 --- !u!4 &2131830790
 Transform:

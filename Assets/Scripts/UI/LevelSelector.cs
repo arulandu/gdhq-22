@@ -16,7 +16,7 @@ public class Level {
 public class LevelSelector : MonoBehaviour
 {  
     public Level[] levels; //set in the editor
-    int currentLevel = 2; //change this in order to change the level that you are currently on
+    public int currentLevel = 1; //change this in order to change the level that you are currently on
     public string mainSceneName = "CarPlayground";
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode){
@@ -31,8 +31,11 @@ public class LevelSelector : MonoBehaviour
             foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Border"))
                 obj.GetComponent<borderScript>().setSize(levels[currentLevel - 1].size);
 
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator"))
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator")) {
                 obj.GetComponent<CityGenerator>().pattern = levels[currentLevel - 1].texture;
+                obj.GetComponent<CityGenerator>().mapWidth = (int)levels[currentLevel - 1].size;
+                obj.GetComponent<CityGenerator>().mapHeight = (int)levels[currentLevel - 1].size;
+            }
             
         }
     }

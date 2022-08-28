@@ -5,9 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class SceneControl : MonoBehaviour
 {
-    public void startGame()
-    {
+
+    public void startLevel(int levelNumber) {
+
+        GameObject.FindObjectOfType<LevelSelector>().currentLevel = levelNumber;
         SceneManager.LoadScene("CarPlayground");
+    }
+
+    public void levelSelect()
+    {
+        SceneManager.LoadScene("LevelSelect");
     }
 
     public void optionsMenu()
