@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Bus : MonoBehaviour
 {    
@@ -9,9 +10,11 @@ public class Bus : MonoBehaviour
     public static uint numChildren;
     public static uint totalNumChildrenDroppedOff;
 
+
     public static void pickUp(uint numChildrenPickingUp)
     {
         numChildren += numChildrenPickingUp;
+
     }
 
     public static void dropOff()
@@ -20,4 +23,16 @@ public class Bus : MonoBehaviour
         totalNumChildrenDroppedOff += numChildren;
         numChildren = 0;
     }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        numChildren = 0;
+        totalNumChildrenDroppedOff = 0;
+        Debug.Log("OnSceneLoaded");
+    }
+    
+    void Awake(){
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+
 }

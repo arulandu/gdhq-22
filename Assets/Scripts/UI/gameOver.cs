@@ -14,6 +14,7 @@ public class gameOver : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI totalNumChildrenDroppedOffText;
     public TextMeshProUGUI promptText; //prompts the user to press any button to return to the main menu
+    public TextMeshProUGUI clearText;
 
     public Vector3 stopSignInitialPos;
     
@@ -56,6 +57,10 @@ public class gameOver : MonoBehaviour
 
         scoreText.text = "Score: " + scoreScript.getScore();
         totalNumChildrenDroppedOffText.text = "Number of Children Dropped Off: " + Bus.totalNumChildrenDroppedOff;
+
+        if (GameObject.FindObjectOfType<CityGenerator>().totalNumChildren == Bus.totalNumChildrenDroppedOff)
+            clearText.text = "STAGE CLEARED!";
+
     }
 
     void displayPrompt() {

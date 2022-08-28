@@ -90,7 +90,7 @@ public class Timer_Script : MonoBehaviour
     //Initialize everything
     void Awake(){
 
-        finalCountdownText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        finalCountdownText = transform.parent.GetChild(0).GetComponent<TextMeshProUGUI>();
         timer_Script = gameObject.GetComponent<Timer_Script>();
         timerText = gameObject.GetComponent<TextMeshProUGUI>();
 
