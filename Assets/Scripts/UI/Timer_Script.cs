@@ -12,6 +12,7 @@ public class Timer_Script : MonoBehaviour
     public static uint totalSeconds; //set this in the editor
     public static uint totalMinutes; //set this in the editor
     public static uint framesLeft; 
+    public static uint totalFrames;
 
     public static uint dangerModeSeconds = 30;
     public static uint dangerModeMinutes = 0;
@@ -25,13 +26,24 @@ public class Timer_Script : MonoBehaviour
 
 
     //stores all variables and methods that can turn the frame count into a timer string
-    struct timeFormat{
+    public struct timeFormat{
         
         public static uint seconds;
         public static uint minutes;
+        public static uint totalFrames;
 
         public static void setTime(uint framesLeft_){
-        
+            
+            totalFrames = framesLeft_;
+
+            minutes = framesLeft_ / 3600;
+            framesLeft_ -= minutes * 3600;
+
+            seconds = framesLeft_ / 60;
+        }
+
+        public static void updateTime (uint framesLeft_) {
+
             minutes = framesLeft_ / 3600;
             framesLeft_ -= minutes * 3600;
 
@@ -45,6 +57,11 @@ public class Timer_Script : MonoBehaviour
                 return minutes + ":" + seconds;
         }
 
+        public static string timeElapsed() {
+            updateTime(totalFrames - (seconds * 60 + minutes * 3600));
+            return toString();
+        }
+
     }
 
     //Updates the UI
@@ -52,7 +69,7 @@ public class Timer_Script : MonoBehaviour
     void UIUpdate(){
 
         
-        timeFormat.setTime(framesLeft);
+        timeFormat.updateTime(framesLeft);
 
         if (timeFormat.minutes <= dangerModeMinutes && timeFormat.seconds <= dangerModeSeconds)
             enableDangerMode();

@@ -221,16 +221,18 @@ public class CityGenerator : MonoBehaviour {
 
         //this doesn't work on up? and left facing houses
         if (random.Next(0, pickUpZoneProbability) == 0) {
+            
             var pickUpZoneTemp = Instantiate (cityElements[(int)cityElementsNames.pickUpZone], new Vector3 ((xIndex * tileSize), defaultYPos, (tileSize / 2) + (zIndex * tileSize)), Quaternion.identity, transform);
             pickUpZoneTemp.transform.localScale = new Vector3 (tileSize * 1.5f, tileSize * 1.5f, tileSize * 1.5f);
             pickUpZoneTemp.GetComponent<Pick_Up_Zone_Collisions>().setHouse(house);
             house.GetComponent<houseScript>().addChild();
             isPickUpZone [new Vector2 (xIndex, zIndex)] = true;
+
+            totalNumChildren++;
         }
         else
             isPickUpZone [new Vector2 (xIndex, zIndex)] = false;
 
-        totalNumChildren++;
     }
 
 
@@ -276,7 +278,10 @@ public class CityGenerator : MonoBehaviour {
 
     void Start(){
         WFCToStreet (this);
+
+        Debug.Log(totalNumChildren);
     }
+
 
 
 }

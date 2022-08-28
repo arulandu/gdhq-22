@@ -22,6 +22,9 @@ public class Bus : MonoBehaviour
         Debug.Log("Dropping Off: " + numChildren);
         totalNumChildrenDroppedOff += numChildren;
         numChildren = 0;
+
+        if (totalNumChildrenDroppedOff == GameObject.FindObjectOfType<CityGenerator>().totalNumChildren)
+            GameObject.FindObjectOfType<gameOver>().startGameOver();
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {

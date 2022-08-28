@@ -7,6 +7,8 @@ using TMPro;
 public class gameOver : MonoBehaviour
 {
     public GameObject stopSignObject;
+    public GameObject miniMapObject;
+    public GameObject timerObject;
     
     public BusController busController;
     public Score_Script scoreScript;
@@ -33,6 +35,7 @@ public class gameOver : MonoBehaviour
 
         Debug.Log("Starting Game Over");
         lockControls();
+        disableOverlays();
         displayStopSign();
         //displayScore();
     }   
@@ -40,6 +43,11 @@ public class gameOver : MonoBehaviour
 
     void lockControls() {      
         busController.takeInput = false;
+    }
+
+    void disableOverlays() {
+        miniMapObject.SetActive(false);
+        timerObject.SetActive(false);
     }
 
     void displayStopSign() {
@@ -55,11 +63,11 @@ public class gameOver : MonoBehaviour
 
     void displayScore() {
 
-        scoreText.text = "Score: " + scoreScript.getScore();
+        scoreText.text = "Time: " + Timer_Script.timeFormat.timeElapsed();
         totalNumChildrenDroppedOffText.text = "Number of Children Dropped Off: " + Bus.totalNumChildrenDroppedOff;
 
-        if (GameObject.FindObjectOfType<CityGenerator>().totalNumChildren == Bus.totalNumChildrenDroppedOff)
-            clearText.text = "STAGE CLEARED!";
+        // if (GameObject.FindObjectOfType<CityGenerator>().totalNumChildren == Bus.totalNumChildrenDroppedOff)
+        //     clearText.text = "STAGE CLEARED!";
 
     }
 
@@ -82,7 +90,6 @@ public class gameOver : MonoBehaviour
 
 
 
-
     void Awake() {
         stopSignInitialPos = stopSignObject.transform.position;
     }
@@ -91,12 +98,8 @@ public class gameOver : MonoBehaviour
 
         if (isWaitingForButtonPress && Input.anyKey) //called last
             exitToMainMenu();
-        
-        else if (isWaitingForButtonPress) //called fourth
-            displayPrompt();
-    
-        else if (isWaitingForStopSign) //called third
-            displayScore();
+
+        else if (isWaitingForStopSign) {} //called third just to make sure update doesnt spam coroutine
 
         else if (stopSignPos >= 1) //if the stop sign is at its final position  //called second
             StartCoroutine(inStopSignWait());
@@ -110,9 +113,11 @@ public class gameOver : MonoBehaviour
     IEnumerator inStopSignWait() {
 
         isWaitingForStopSign = true;
-
+        displayScore();
+        
         yield return new WaitForSeconds(waitAfterStopSign);
         
         isWaitingForButtonPress = true;
+        displayPrompt();
     }
 }
