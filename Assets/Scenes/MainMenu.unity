@@ -248,7 +248,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 207934166}
         m_TargetAssemblyTypeName: SceneControl, Assembly-CSharp
-        m_MethodName: startGame
+        m_MethodName: levelSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
