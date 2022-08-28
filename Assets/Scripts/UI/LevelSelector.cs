@@ -17,7 +17,7 @@ public class LevelSelector : MonoBehaviour
 {  
     public Level[] levels; //set in the editor
     public int currentLevel = 1; //change this in order to change the level that you are currently on
-    public string mainSceneName = "CarPlayground";
+    public string mainSceneName = "Game";
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode){
  
