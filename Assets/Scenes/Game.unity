@@ -15653,13 +15653,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df93ebd3d01f3ee40aebb3b7522ee081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engineLoop: {fileID: 0}
-  engineStart: {fileID: 0}
-  tireSkid: {fileID: 0}
+  engineLoop: {fileID: 8798940839905757469}
+  engineStart: {fileID: 8798940839905757467}
+  tireSkid: {fileID: 8798940839905757468}
   isFlippedOver: 0
+  _engineOn: 0
+  hardBreakThreshold: 0.6
   takeInput: 1
   boostFX: {fileID: 224259815}
   boostFXPos: {fileID: 224259816}
+  currentDrift: 0
   driftResetThreshold: 0.1
   midBoostThreshold: 5
   midBoostSpeed: 200
@@ -15865,10 +15868,11 @@ AudioSource:
   m_GameObject: {fileID: 8798940839905757465}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -6445346084561144164, guid: e1905a2265473964dac5e47818ca4835,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 5072ec7d5b2ce6449aa9e849a3bfd8c5, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0

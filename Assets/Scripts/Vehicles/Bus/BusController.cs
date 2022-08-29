@@ -9,8 +9,10 @@ public class BusController : MonoBehaviour
     public AudioSource engineLoop, engineStart, tireSkid;
 
     public bool isFlippedOver = false;
+    [SerializeField]
     private bool _engineOn = false;
     private bool _canHardBreak = true;
+    public float hardBreakThreshold = 0.1f;
     private Vector2 _dirInput;
     public bool takeInput = true;
 
@@ -24,6 +26,7 @@ public class BusController : MonoBehaviour
     Vector3 direction;
     Vector3 prevPos;
     Vector3 velocity;
+    [SerializeField]
     float currentDrift;
     float totalDrift;
     public float driftResetThreshold; //if the drift is below this threshold then the driftTotal resets
@@ -61,13 +64,15 @@ public class BusController : MonoBehaviour
             _rb.velocity = new Vector3(0, 0, 0);
         }
 
-        if (Mathf.Abs(_dirInput.y) > 0.1f != _engineOn)
+        if (Mathf.Abs(_dirInput.y) > 0.1f && !_engineOn)
         {
-            if (_engineOn) StartCoroutine(StartEngine());
-            else StopEngine();
+            StartCoroutine(StartEngine());
+        } else if (Math.Abs(_dirInput.y) < 0.01f && _engineOn)
+        {
+            StopEngine();
         }
-
-        if (_canHardBreak && (currentDrift > midBoostThreshold))
+        
+        if (_canHardBreak && (Vector3.Cross(direction, velocity.normalized).magnitude > hardBreakThreshold && _rb.velocity.magnitude > 0.5f))
         {
             StartCoroutine(HardBreak());
         }
@@ -77,6 +82,7 @@ public class BusController : MonoBehaviour
 
     IEnumerator StartEngine()
     {
+        Debug.Log("start engine");
         _engineOn = true;
         engineStart.Play();
         yield return new WaitForSeconds(0.5f);
@@ -85,12 +91,14 @@ public class BusController : MonoBehaviour
 
     void StopEngine()
     {
+        Debug.Log("stop engine");
         engineLoop.Stop();
         _engineOn = false;
     }
 
     IEnumerator HardBreak()
     {
+        Debug.Log("hard break");
         _canHardBreak = false;
         tireSkid.Play();
         yield return new WaitForSeconds(1);
