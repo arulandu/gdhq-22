@@ -1,13 +1,18 @@
-//using System.Collections;
-//using System.Collections.Generic;
+using System;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
 
 public class Pick_Up_Zone_Collisions : MonoBehaviour
 {
+    public ParticleSystem collectFX;
+    public Transform collectFXPos;
     bool alreadyVisited;
     public uint numChildrenAtPickUp; //number of children at this pick up zone
     static GameObject busObject; //initialize this when it is instantiated
     GameObject houseObject; //initialize this when it is instantiated
+    
 
     void Awake(){
 
@@ -23,6 +28,17 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
             alreadyVisited = true;
             Bus.pickUp(numChildrenAtPickUp);
             houseObject.GetComponent<houseScript>().removeChild();
+            
+            collectFXPos.position = transform.position;
+            if (!collectFX.isPlaying)
+            {
+                if (!collectFX.enableEmission)
+                {
+                    collectFX.enableEmission = true;
+                }
+
+                collectFX.Play();
+            }
         }
     }
 
