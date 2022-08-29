@@ -72,7 +72,7 @@ public class BusController : MonoBehaviour
             StopEngine();
         }
         
-        if (_canHardBreak && (Vector3.Cross(direction, velocity.normalized).magnitude > hardBreakThreshold && _rb.velocity.magnitude > 0.5f))
+        if (_canHardBreak && (Vector3.Cross(direction, velocity.normalized).magnitude > hardBreakThreshold && _rb.velocity.magnitude > 0.2f))
         {
             StartCoroutine(HardBreak());
         }
@@ -123,7 +123,7 @@ public class BusController : MonoBehaviour
         velocity = (transform.position - prevPos) / Time.fixedDeltaTime;
         prevPos = transform.position;
 
-        currentDrift = Vector3.Cross(direction, velocity.normalized).magnitude;
+        currentDrift = _rb.velocity.magnitude > 0.2f ? Vector3.Cross(direction, velocity.normalized).magnitude : 0f;
 
         if (_dirInput.y >= 0)
             totalDrift += currentDrift;
