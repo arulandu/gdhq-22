@@ -13,6 +13,8 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
     static GameObject busObject; //initialize this when it is instantiated
     GameObject houseObject; //initialize this when it is instantiated
     
+    public AudioSource pickUpAudio;
+
 
     void Awake(){
 
@@ -38,6 +40,7 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
                 }
 
                 collectFX.Play();
+                pickUpAudio.Play();
             }
         }
     }
