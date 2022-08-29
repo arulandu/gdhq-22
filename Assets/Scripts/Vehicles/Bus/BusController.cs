@@ -6,8 +6,11 @@ using System.Collections.Generic;
 
 public class BusController : MonoBehaviour
 {
-    public bool isFlippedOver = false;
+    public AudioSource engineLoop, engineStart, tireSkid;
 
+    public bool isFlippedOver = false;
+    private bool _engineOn = false;
+    private bool _canHardBreak = true;
     private Vector2 _dirInput;
     public bool takeInput = true;
 
@@ -58,9 +61,48 @@ public class BusController : MonoBehaviour
             _rb.velocity = new Vector3(0, 0, 0);
         }
 
+        if (Mathf.Abs(_dirInput.y) > 0.1f != _engineOn)
+        {
+            if (_engineOn) StartCoroutine(StartEngine());
+            else StopEngine();
+        }
+
+        if (_canHardBreak && (currentDrift > midBoostThreshold))
+        {
+            StartCoroutine(HardBreak());
+        }
+        
         _automobile.UpdateVisuals();
     }
 
+    IEnumerator StartEngine()
+    {
+        _engineOn = true;
+        engineStart.Play();
+        yield return new WaitForSeconds(0.5f);
+        engineLoop.Play();
+    }
+
+    void StopEngine()
+    {
+        engineLoop.Stop();
+        _engineOn = false;
+    }
+
+    IEnumerator HardBreak()
+    {
+        _canHardBreak = false;
+        tireSkid.Play();
+        yield return new WaitForSeconds(1);
+        _canHardBreak = true;
+    }
+    
+    
+    
+    
+    
+    
+    
     public void Explode()
     {
         Debug.Log("Exploding");
