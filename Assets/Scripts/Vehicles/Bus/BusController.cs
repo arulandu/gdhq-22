@@ -15,8 +15,8 @@ public class BusController : MonoBehaviour
     private AutomobileController _automobile;
 
     //boostparticles
-    public Transform boostFX;
-
+    public ParticleSystem boostFX;
+    public Transform boostFXPos;
     //drifting
     Vector3 direction;
     Vector3 prevPos;
@@ -111,7 +111,16 @@ public class BusController : MonoBehaviour
             _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.rightWheel.transform.position);
             
         }
-        boostFX.position = transform.position;
+        boostFXPos.position = transform.position;
+        if (!boostFX.isPlaying)
+        {
+            if (!boostFX.enableEmission)
+            {
+                boostFX.enableEmission = true;
+            }
+            
+            boostFX.Play();
+        }
         //Debug.Log("isMidBoosting");
         totalDrift = 0;
     }
@@ -126,7 +135,15 @@ public class BusController : MonoBehaviour
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.leftWheel.transform.position);
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.rightWheel.transform.position);
         }
-        boostFX.position = transform.position;
+        boostFXPos.position = transform.position;
+        if (!boostFX.isPlaying)
+        {
+            if (!boostFX.enableEmission)
+            {
+                boostFX.enableEmission = true;
+            }
+            boostFX.Play();
+        }
 
         //Debug.Log("isTurboBoosting");
         totalDrift = 0;
