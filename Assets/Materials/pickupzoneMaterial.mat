@@ -10,9 +10,10 @@ Material:
   m_Name: pickupzoneMaterial
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords:
+  - _EMISSION
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
@@ -113,7 +114,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0, g: 0.5254902, b: 0.9450981, a: 1}
     - _Color: {r: 0, g: 0.5254902, b: 0.9450981, a: 1}
-    - _EmissionColor: {r: 0, g: 0.3030716, b: 1.319508, a: 1}
+    - _EmissionColor: {r: 0, g: 0.84705883, b: 3.9215686, a: 0.75008893}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &2067328049383971827
