@@ -5,6 +5,8 @@ using System;
 
 public class houseScript : MonoBehaviour
 {
+    public GameObject zoneMarker;
+    public Vector3 zoneOffset;
     public GameObject childPrefab;
     public Quaternion childRotation;
     List<GameObject> childrenList = new List<GameObject>();
@@ -12,8 +14,12 @@ public class houseScript : MonoBehaviour
 
     System.Random random = new System.Random();
 
-
+:wq:
     public void addChild() {
+        if (childrenList.Count == 0)
+        {
+            Instantiate(zoneMarker, transform.position + zoneOffset, Quaternion.identity, transform);
+        }
         childrenList.Add(Instantiate(childPrefab, chooseSpawningSpot(), childRotation, transform));
     }
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4728977559778696885}
   - component: {fileID: 2029386861317202989}
   m_Layer: 0
-  m_Name: pickUpZoneFX
+  m_Name: ZoneMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3533160247740617784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.64, y: 0.18, z: 0.365}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 41a52c7ecfef6b94882a30100cf9aa91, type: 2}
+  - {fileID: 2100000, guid: 0d078eeeec1cb2a4db13a19c4696f1a7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -232,6 +232,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 066dbb566f1b45d41955577f2150b249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zoneMarker: {fileID: 3533160247740617784, guid: de383b155b1751f4cb208ef92b869be6,
+    type: 3}
+  zoneOffset: {x: 0, y: 4, z: 0}
   childPrefab: {fileID: 4477214600545642047, guid: 9c67232128456d048b4ea52fb5e7c69e,
     type: 3}
   childRotation: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
