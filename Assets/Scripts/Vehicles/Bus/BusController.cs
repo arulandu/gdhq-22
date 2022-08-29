@@ -152,6 +152,10 @@ public class BusController : MonoBehaviour
 
     public void midBoost()
     {
+        boostFX.Clear();
+        boostFX.transform.position = transform.position;
+        boostFX.enableEmission = true;
+        boostFX.Play();
 
         _rb.velocity = transform.forward * _rb.velocity.magnitude;
         //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
@@ -161,22 +165,26 @@ public class BusController : MonoBehaviour
             _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.rightWheel.transform.position);
             
         }
-        boostFXPos.position = transform.position;
-        if (!boostFX.isPlaying)
-        {
-            if (!boostFX.enableEmission)
-            {
-                boostFX.enableEmission = true;
-            }
+        // boostFXPos.position = transform.position;
+        // if (!boostFX.isPlaying)
+        // {
+        //     if (!boostFX.enableEmission)
+        //     {
+        //         boostFX.enableEmission = true;
+        //     }
             
-            boostFX.Play();
-        }
+        //     boostFX.Play();
+        // }
         //Debug.Log("isMidBoosting");
         totalDrift = 0;
     }
 
     public void turboBoost()
     {
+        boostFX.Clear();
+        boostFX.transform.position = transform.position;
+        boostFX.enableEmission = true;
+        boostFX.Play();
 
         _rb.velocity = transform.forward * _rb.velocity.magnitude;
         //_rb.velocity = _rb.velocity - transform.right; //make sure the players drift is canceled out and they travel straight forwards
@@ -185,15 +193,15 @@ public class BusController : MonoBehaviour
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.leftWheel.transform.position);
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.rightWheel.transform.position);
         }
-        boostFXPos.position = transform.position;
-        if (!boostFX.isPlaying)
-        {
-            if (!boostFX.enableEmission)
-            {
-                boostFX.enableEmission = true;
-            }
-            boostFX.Play();
-        }
+        // boostFXPos.position = transform.position;
+        // if (!boostFX.isPlaying)
+        // {
+        //     if (!boostFX.enableEmission)
+        //     {
+        //         boostFX.enableEmission = true;
+        //     }
+        //     boostFX.Play();
+        // }
 
         //Debug.Log("isTurboBoosting");
         totalDrift = 0;
