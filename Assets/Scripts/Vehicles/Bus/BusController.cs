@@ -14,6 +14,9 @@ public class BusController : MonoBehaviour
     private Rigidbody _rb;
     private AutomobileController _automobile;
 
+    //boostparticles
+    public Transform boostFX;
+
     //drifting
     Vector3 direction;
     Vector3 prevPos;
@@ -106,8 +109,9 @@ public class BusController : MonoBehaviour
         {
             _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.leftWheel.transform.position);
             _rb.AddForceAtPosition(transform.forward * (midBoostSpeed), axleInfo.rightWheel.transform.position);
+            
         }
-
+        boostFX.position = transform.position;
         //Debug.Log("isMidBoosting");
         totalDrift = 0;
     }
@@ -122,6 +126,7 @@ public class BusController : MonoBehaviour
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.leftWheel.transform.position);
             _rb.AddForceAtPosition(transform.forward * (turboBoostSpeed), axleInfo.rightWheel.transform.position);
         }
+        boostFX.position = transform.position;
 
         //Debug.Log("isTurboBoosting");
         totalDrift = 0;
