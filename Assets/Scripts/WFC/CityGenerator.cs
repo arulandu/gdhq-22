@@ -80,8 +80,28 @@ public class CityGenerator : MonoBehaviour
 
         isPickUpZone = new Dictionary<Vector2, bool>();
 
+
+        bool foundGoodSeed = false;
         Texture2D WFCTexture = WFC.Generate(pattern, 3, width, height, false, true, false, 8, (int)1e9, seed);
-        debugImg.texture = WFCTexture;
+
+        while (!foundGoodSeed) {
+            
+            WFCTexture = WFC.Generate(pattern, 3, width, height, false, true, false, 8, (int)1e9, seed);
+
+            for (int xTextureIndex = 0; xTextureIndex < width; xTextureIndex += textureResolution) {
+                if (WFCTexture.GetPixel(xTextureIndex, 0) == streetColor) {
+                    foundGoodSeed = true; 
+
+                    Debug.Log("(" + xTextureIndex + ", " + (height-1) + ")");
+                }                  
+            }
+
+            seed++;
+
+            Debug.Log("Found good seed: " + seed);
+        }
+
+        //debugImg.texture = WFCTexture;
         //loop through the WFC texture and generate a street if the pixel is the right color
         for (int xTextureIndex = 0; xTextureIndex < width; xTextureIndex += textureResolution) {
             for (int yTextureIndex = 0; yTextureIndex < height; yTextureIndex += textureResolution) { 
@@ -240,15 +260,15 @@ public class CityGenerator : MonoBehaviour
 
     }
 
-    void generateSchool (CityGenerator thisClass,  GameObject bus) {
+    void generateSchool (CityGenerator thisClass,  GameObject bus) { 
 
-        var school = Instantiate (cityElements [(int) cityElementsNames.school], new Vector3 (4 * tileSize, defaultYPos, -1 * tileSize), Quaternion.Euler (0, 90, 0), transform);
-        
-        Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (4 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
-        Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (3 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
-        Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (2 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
-        Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (5 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
-        Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (6 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
+        for (int x = 0; x < cityMap.GetLength(0); x++){    
+            if (cityMap[x, 0] == 8 || cityMap[x, 0] == 9) {
+                Instantiate (cityElements [(int) cityElementsNames.school], new Vector3 (x * tileSize, defaultYPos, -1 * tileSize), Quaternion.Euler (0, 90, 0), transform);
+                busObject.transform.position = new Vector3(x * tileSize, defaultYPos + 0.3f, tileSize/4);
+                break;
+            }
+        }
     }
     
     void generateCars (CityGenerator thisClass) {

@@ -48,6 +48,7 @@ public class gameOver : MonoBehaviour
     void disableOverlays() {
         miniMapObject.SetActive(false);
         timerObject.SetActive(false);
+
     }
 
     void displayStopSign() {
