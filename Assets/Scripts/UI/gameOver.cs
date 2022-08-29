@@ -58,7 +58,7 @@ public class gameOver : MonoBehaviour
         
         stopSignPos += stopSignSpeed;
         stopSignObject.transform.position = Vector3.Lerp(stopSignInitialPos, stopSignFinalPos, stopSignPos);
-        Debug.Log(stopSignPos);
+        // Debug.Log(stopSignPos);
     }
 
     void displayScore() {

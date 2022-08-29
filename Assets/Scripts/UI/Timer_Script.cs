@@ -1,5 +1,7 @@
 // using System.Collections;
 // using System.Collections.Generic;
+
+using System;
 using UnityEngine;
 using TMPro;
 
@@ -9,8 +11,8 @@ public class Timer_Script : MonoBehaviour
     public static Timer_Script timer_Script;
     public gameOver gameOverScript;
 
-    public static uint totalSeconds; //set this in the editor
-    public static uint totalMinutes; //set this in the editor
+    public uint totalSeconds; //set this in the editor
+    public uint totalMinutes; //set this in the editor
     public static uint framesLeft; 
     public static uint totalFrames;
 
@@ -110,15 +112,11 @@ public class Timer_Script : MonoBehaviour
         finalCountdownText = transform.parent.GetChild(0).GetComponent<TextMeshProUGUI>();
         timer_Script = gameObject.GetComponent<Timer_Script>();
         timerText = gameObject.GetComponent<TextMeshProUGUI>();
-
     }
 
-    //called from level selector
-    public static void setTime(uint totalMinutes_, uint totalSeconds_) {
-
+    private void Start()
+    {
         Debug.Log("Setting Time");
-        totalMinutes = totalMinutes_;
-        totalSeconds = totalSeconds_;
 
         framesLeft = (totalMinutes * 3600) + (totalSeconds * 60);    
         timeFormat.setTime(framesLeft);
@@ -127,7 +125,6 @@ public class Timer_Script : MonoBehaviour
 
         Debug.Log("Setting Time");
     }
-    
 
     void FixedUpdate(){
 

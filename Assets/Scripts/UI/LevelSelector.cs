@@ -23,19 +23,19 @@ public class LevelSelector : MonoBehaviour
  
         if (scene.name == mainSceneName){
             
-            Timer_Script.setTime(levels[currentLevel - 1].totalMinutes, levels[currentLevel - 1].totalSeconds);
+            // Timer_Script.setTime(levels[currentLevel - 1].totalMinutes, levels[currentLevel - 1].totalSeconds);
 
             foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Bus"))
                 obj.transform.position = levels[currentLevel - 1].busSpawnPos;
 
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Border"))
-                obj.GetComponent<borderScript>().setSize(levels[currentLevel - 1].size);
+            // foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Border"))
+            //     obj.GetComponent<borderScript>().setSize(levels[currentLevel - 1].size);
 
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator")) {
-                obj.GetComponent<CityGenerator>().pattern = levels[currentLevel - 1].texture;
-                obj.GetComponent<CityGenerator>().mapWidth = (int)levels[currentLevel - 1].size;
-                obj.GetComponent<CityGenerator>().mapHeight = (int)levels[currentLevel - 1].size;
-            }
+            // foreach (GameObject obj in GameObject.FindGameObjectsWithTag("CityGenerator")) {
+            //     obj.GetComponent<CityGenerator>().pattern = levels[currentLevel - 1].texture;
+            //     obj.GetComponent<CityGenerator>().mapWidth = (int)levels[currentLevel - 1].size;
+            //     obj.GetComponent<CityGenerator>().mapHeight = (int)levels[currentLevel - 1].size;
+            // }
             
         }
     }

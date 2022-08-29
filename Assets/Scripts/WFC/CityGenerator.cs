@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
-public class CityGenerator : MonoBehaviour {
+public class CityGenerator : MonoBehaviour
+{
 
+    public RawImage debugImg;
     public GameObject busObject; //should be set in the editor
 
     //stats (cannot be tweaked in the editor must be tweaked in script)
@@ -16,6 +20,7 @@ public class CityGenerator : MonoBehaviour {
     public int textureResolution {get;} = 2;
     public Texture2D pattern; //input pattern to the WFC algorithm
 
+    public int seed;
     public float streetXOffsetX;
     public float streetXOffsetZ;
     public float streetZOffsetX;
@@ -75,8 +80,8 @@ public class CityGenerator : MonoBehaviour {
 
         isPickUpZone = new Dictionary<Vector2, bool>();
 
-        Texture2D WFCTexture = WFC.Generate(pattern, 3, width, height, false, true, false, 8, (int)1e9, 1);
-
+        Texture2D WFCTexture = WFC.Generate(pattern, 3, width, height, false, true, false, 8, (int)1e9, seed);
+        debugImg.texture = WFCTexture;
         //loop through the WFC texture and generate a street if the pixel is the right color
         for (int xTextureIndex = 0; xTextureIndex < width; xTextureIndex += textureResolution) {
             for (int yTextureIndex = 0; yTextureIndex < height; yTextureIndex += textureResolution) { 
@@ -235,8 +240,6 @@ public class CityGenerator : MonoBehaviour {
 
     }
 
-
-
     void generateSchool (CityGenerator thisClass,  GameObject bus) {
 
         var school = Instantiate (cityElements [(int) cityElementsNames.school], new Vector3 (4 * tileSize, defaultYPos, -1 * tileSize), Quaternion.Euler (0, 90, 0), transform);
@@ -247,8 +250,7 @@ public class CityGenerator : MonoBehaviour {
         Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (5 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
         Instantiate (cityElements [(int) cityElementsNames.grass], new Vector3 (6 * tileSize, defaultYPos, -0.675f * tileSize), Quaternion.identity, transform);
     }
-
-
+    
     void generateCars (CityGenerator thisClass) {
 
         for (int xIndex = 0; xIndex < mapWidth; xIndex++) {
@@ -276,12 +278,11 @@ public class CityGenerator : MonoBehaviour {
         }
     }
 
-    void Start(){
+    void Start()
+    {
+        seed = seed >= 0 ? seed : Random.Range(0, (int)1e6);
         WFCToStreet (this);
-
+        FindObjectOfType<borderScript>().setSize((uint)mapWidth);
         Debug.Log(totalNumChildren);
     }
-
-
-
 }
