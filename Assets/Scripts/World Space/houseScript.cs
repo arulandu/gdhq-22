@@ -14,7 +14,6 @@ public class houseScript : MonoBehaviour
 
     System.Random random = new System.Random();
 
-:wq:
     public void addChild() {
         if (childrenList.Count == 0)
         {
