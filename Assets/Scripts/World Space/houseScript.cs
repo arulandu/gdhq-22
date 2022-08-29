@@ -11,13 +11,13 @@ public class houseScript : MonoBehaviour
     public Quaternion childRotation;
     List<GameObject> childrenList = new List<GameObject>();
     public List<Vector3> spawningSpots = new List<Vector3>();
-
+    private GameObject marker;
     System.Random random = new System.Random();
 
     public void addChild() {
         if (childrenList.Count == 0)
         {
-            Instantiate(zoneMarker, transform.position + zoneOffset, Quaternion.identity, transform);
+            marker = Instantiate(zoneMarker, transform.position + zoneOffset, Quaternion.identity, transform);
         }
         childrenList.Add(Instantiate(childPrefab, chooseSpawningSpot(), childRotation, transform));
     }
@@ -33,9 +33,10 @@ public class houseScript : MonoBehaviour
     }
 
     public void removeChild () {
-        
         for (int x = 0; x < childrenList.Count; x++)
             Destroy(childrenList[x]);
+        
+        Destroy(marker);
     }
 
 }
