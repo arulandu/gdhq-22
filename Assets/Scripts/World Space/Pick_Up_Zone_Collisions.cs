@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 public class Pick_Up_Zone_Collisions : MonoBehaviour
 {
-    public ParticleSystem collectFX;
-    public Transform collectFXPos;
     bool alreadyVisited;
     public uint numChildrenAtPickUp; //number of children at this pick up zone
     static GameObject busObject; //initialize this when it is instantiated
@@ -30,19 +28,8 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
             pickUpAudio.Play();
             
             alreadyVisited = true;
-            Bus.pickUp(numChildrenAtPickUp);
+            busObject.GetComponent<Bus>().pickUp(numChildrenAtPickUp);
             houseObject.GetComponent<houseScript>().removeChild();
-            
-            collectFXPos.position = transform.position;
-            if (!collectFX.isPlaying)
-            {
-                if (!collectFX.enableEmission)
-                {
-                    collectFX.enableEmission = true;
-                }
-
-                collectFX.Play();
-            }
         }
     }
 

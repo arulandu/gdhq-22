@@ -69,7 +69,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad77df4149407774fbbb20ff934bad4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectFX: {fileID: 0}
+  collectFX: {fileID: 8328588979247441176, guid: 2239c18b7d12e1447a264ea1c2b8a6dc,
+    type: 3}
   collectFXPos: {fileID: 0}
   numChildrenAtPickUp: 1
   pickUpAudio: {fileID: -5050526208476559735}

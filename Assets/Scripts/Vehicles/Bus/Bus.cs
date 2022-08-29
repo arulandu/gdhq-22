@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Bus : MonoBehaviour
-{    
+{
+    public GameObject collectFx;
     //these will be static for right now 
     //if we would ever consider multiplayer (which we won't for the purposes of this game jam) we would have to rewrite a lot of the child drop off and pick up code
 
@@ -12,9 +13,11 @@ public class Bus : MonoBehaviour
     public static uint totalNumChildrenDroppedOff;
 
 
-    public static void pickUp(uint numChildrenPickingUp)
+    public void pickUp(uint numChildrenPickingUp)
     {
         numChildren += numChildrenPickingUp;
+        var obj = Instantiate(collectFx, transform.position, Quaternion.identity);
+        Destroy(obj, 5);
     }
 
     public static void dropOff()
