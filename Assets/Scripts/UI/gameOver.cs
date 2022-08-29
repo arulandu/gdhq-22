@@ -31,6 +31,11 @@ public class gameOver : MonoBehaviour
 
     public float waitAfterStopSign = 2f;
 
+
+    public AudioSource winAudio;
+    public AudioSource loseAudio;
+
+
     public void startGameOver() {
 
         Debug.Log("Starting Game Over");
@@ -67,8 +72,10 @@ public class gameOver : MonoBehaviour
         scoreText.text = "Time: " + Timer_Script.timeFormat.timeElapsed();
         totalNumChildrenDroppedOffText.text = "Number of Children Dropped Off: " + Bus.totalNumChildrenDroppedOff;
 
-        // if (GameObject.FindObjectOfType<CityGenerator>().totalNumChildren == Bus.totalNumChildrenDroppedOff)
-        //     clearText.text = "STAGE CLEARED!";
+        if (GameObject.FindObjectOfType<CityGenerator>().totalNumChildren == Bus.totalNumChildrenDroppedOff)
+            winAudio.Play();
+        else 
+            loseAudio.Play();
 
     }
 
@@ -108,7 +115,6 @@ public class gameOver : MonoBehaviour
         else if (isMovingStopSign)  //called first
             moveStopSign();
     }
-
 
 
     IEnumerator inStopSignWait() {

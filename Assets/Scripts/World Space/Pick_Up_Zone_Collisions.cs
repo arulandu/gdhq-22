@@ -26,7 +26,9 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
     //when one of the drop zones detects a collision, double check if it is colliding with the car and then call the Drop_Off function
     void OnTriggerEnter(Collider collider){
         if (collider == busObject.GetComponent<BoxCollider>() && alreadyVisited == false){
-
+            
+            pickUpAudio.Play();
+            
             alreadyVisited = true;
             Bus.pickUp(numChildrenAtPickUp);
             houseObject.GetComponent<houseScript>().removeChild();
@@ -40,7 +42,6 @@ public class Pick_Up_Zone_Collisions : MonoBehaviour
                 }
 
                 collectFX.Play();
-                pickUpAudio.Play();
             }
         }
     }
