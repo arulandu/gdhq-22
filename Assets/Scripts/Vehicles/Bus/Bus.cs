@@ -7,6 +7,7 @@ public class Bus : MonoBehaviour
 {    
     //these will be static for right now 
     //if we would ever consider multiplayer (which we won't for the purposes of this game jam) we would have to rewrite a lot of the child drop off and pick up code
+
     public static uint numChildren;
     public static uint totalNumChildrenDroppedOff;
 
@@ -14,7 +15,6 @@ public class Bus : MonoBehaviour
     public static void pickUp(uint numChildrenPickingUp)
     {
         numChildren += numChildrenPickingUp;
-
     }
 
     public static void dropOff()
