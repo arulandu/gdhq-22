@@ -13,11 +13,7 @@ public class gameOver : MonoBehaviour
     public BusController busController;
     public Score_Script scoreScript;
 
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI totalNumChildrenDroppedOffText;
-    public TextMeshProUGUI promptText; //prompts the user to press any button to return to the main menu
-    public TextMeshProUGUI clearText;
-
+    public TextMeshProUGUI titleTxt, descriptionTxt;
     public Vector3 stopSignInitialPos;
     
 
@@ -67,21 +63,24 @@ public class gameOver : MonoBehaviour
         // Debug.Log(stopSignPos);
     }
 
-    void displayScore() {
+    void displayScore()
+    {
+        Debug.Log(FindObjectOfType<Timer_Script>(true));
+        bool win = FindObjectOfType<CityGenerator>().totalNumChildren == Bus.totalNumChildrenDroppedOff;
+        titleTxt.text = win ? "Dang, You Bussin' Dawg!" : "My Grandma's Better!";
+        descriptionTxt.text = "You arrived at " + FindObjectOfType<Timer_Script>(true)._currentTime.toString() +
+                              " and dropped off " + Bus.totalNumChildrenDroppedOff + " kids...";
 
-        scoreText.text = "Time: " + Timer_Script.timeFormat.timeElapsed();
-        totalNumChildrenDroppedOffText.text = "Number of Children Dropped Off: " + Bus.totalNumChildrenDroppedOff;
-
-        if (GameObject.FindObjectOfType<CityGenerator>().totalNumChildren == Bus.totalNumChildrenDroppedOff)
+        if (win)
             winAudio.Play();
         else 
             loseAudio.Play();
 
     }
-
-    void displayPrompt() {
-        promptText.gameObject.SetActive(true);
-    }
+    //
+    // void displayPrompt() {
+    //     promptText.gameObject.SetActive(true);
+    // }
 
     void exitToMainMenu() {
 
@@ -125,6 +124,6 @@ public class gameOver : MonoBehaviour
         yield return new WaitForSeconds(waitAfterStopSign);
         
         isWaitingForButtonPress = true;
-        displayPrompt();
+        // displayPrompt();
     }
 }

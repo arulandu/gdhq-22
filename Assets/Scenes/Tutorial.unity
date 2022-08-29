@@ -869,7 +869,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press Escape to go back to the Main Menu
+  m_text: Press Backspace to go back at all times.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2a0383358db821f419d8d6314f0dec64, type: 2}
   m_sharedMaterial: {fileID: 6191430624266982289, guid: 2a0383358db821f419d8d6314f0dec64,
