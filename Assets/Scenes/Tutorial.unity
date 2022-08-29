@@ -167,11 +167,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a097da7750fa54a882824eec49c81a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugImg: {fileID: 0}
   busObject: {fileID: 0}
   mapWidth: 100
   mapHeight: 100
   streetColor: {r: 0, g: 0, b: 0, a: 1}
   pattern: {fileID: 2800000, guid: 3d3585cb6bd8b9d45bd28cac4aca4b46, type: 3}
+  seed: 0
   streetXOffsetX: -1.8
   streetXOffsetZ: 2
   streetZOffsetX: 0.2
@@ -849,7 +851,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 413731088}
-  m_LocalRotation: {x: 0.2669336, y: 3.4238033e-15, z: -1.836517e-15, w: 0.96371496}
+  m_LocalRotation: {x: 0.26693356, y: 0.000000028720944, z: -0.00000000795524, w: 0.96371496}
   m_LocalPosition: {x: 0, y: 10.5, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -881,8 +883,8 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
+  m_RenderPostProcessing: 1
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -938,6 +940,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopSignObject: {fileID: 1470419940}
+  miniMapObject: {fileID: 0}
+  timerObject: {fileID: 0}
   busController: {fileID: 8455535609955769308}
   scoreScript: {fileID: 1641357043}
   scoreText: {fileID: 882040246}
@@ -3220,6 +3224,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c922cbba8fdb1e743b154062315b75c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1346412588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1346412590}
+  - component: {fileID: 1346412589}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1346412589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1346412588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 90da6735677571748ba44b02001945aa, type: 2}
+--- !u!4 &1346412590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1346412588}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.0410333, y: 8.911947, z: 3.550509}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1372049295
 GameObject:
   m_ObjectHideFlags: 0
@@ -3272,6 +3325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverScript: {fileID: 413731094}
+  totalSeconds: 0
+  totalMinutes: 0
   isFinalCountdown: 0
   dangerModeColor: {r: 0.7264151, g: 0, b: 0, a: 1}
 --- !u!114 &1372049298
@@ -4190,7 +4245,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.8599222, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -4206,7 +4261,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1791508251}
-  m_LocalRotation: {x: 0.2669336, y: 3.4238033e-15, z: -1.836517e-15, w: 0.96371496}
+  m_LocalRotation: {x: 0.26693356, y: 0.000000028720944, z: -0.00000000795524, w: 0.96371496}
   m_LocalPosition: {x: 0, y: 10.5, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
