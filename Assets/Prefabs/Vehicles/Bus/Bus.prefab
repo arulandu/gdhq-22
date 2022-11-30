@@ -84,7 +84,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5289815700893772487}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -294,10 +294,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df93ebd3d01f3ee40aebb3b7522ee081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  engineLoop: {fileID: 0}
+  engineStart: {fileID: 0}
+  tireSkid: {fileID: 0}
   isFlippedOver: 0
+  _engineOn: 0
+  hardBreakThreshold: 0.1
+  takeInput: 1
+  boostFX: {fileID: 0}
+  boostFXPos: {fileID: 0}
+  currentDrift: 0
   driftResetThreshold: 1
-  miniBoostThreshold: 100
-  miniBoostSpeed: 100
   midBoostThreshold: 500
   midBoostSpeed: 200
   turboBoostThreshold: 1000
